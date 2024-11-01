@@ -133,7 +133,7 @@ computeDimensionNumerically (List) := (parameterization) -> (
     -- function requires L to be defined, but should work for any number of
     -- leaves (not just 4) provided that L is defined for that. Last updated
     -- 2024-10-22 by mh
-    edgeVariables = flatten entries vars (ring p_0); -- recover the edge parameters used in the parameterization
+    edgeVariables = flatten entries vars (ring parameterization_0); -- recover the edge parameters used in the parameterization
     randomValues = apply(edgeVariables, i-> i=> random QQ);
     J1 = jacobian matrix{parameterization}; -- compute the symbolic jacobian
     J0 = sub(J1, randomValues); -- substitute in the random variables
