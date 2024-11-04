@@ -14,7 +14,7 @@ generateSigma (List,ZZ) := (EPListSorted,nLeaves) -> (
     sigma = mutableMatrix v;
     for j from 1 to #EPListSorted do sigma = sigma + (A^j)*(mutableMatrix v);
     transpose matrix{apply(numRows sigma, j -> sum flatten entries (coefficients sigma_(j,0))_0)}
-    )
+    )x
 
 generateQ = method()
 generateQ (Matrix,List,Sequence,List) := (sigma,reticulationPairList,seq,EPListSorted) -> (
