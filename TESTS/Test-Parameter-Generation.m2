@@ -26,11 +26,4 @@ end
 
 restart
 -- Start M2 buffer in one directory above
-needs "Parametrization-Generation.m2"
-needs "TESTS/Test-Parameter-Generation.m2"
--- Sanity checks
-peek N4Leaves
-peek M4Leaves
---Compute parametrizations
-computeParametrization(N4Leaves,M4Leaves,false) -- parametrization without the Fourier coordinates
-computeParametrization(N4Leaves,M4Leaves,true) -- parametrization with the Fourier coordinates
+needs "Pa
