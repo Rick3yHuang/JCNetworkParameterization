@@ -1,5 +1,44 @@
 needs "DATA/Network-Data-Type.m2"
 
+-----------------------------------  Find Parametrization ----------------------------------------
+
+-*
+Compute the parameterization of a network under thea given model
+Input: 
+  N -- a network of Network type
+  M -- a modle M of Model type
+  includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
+Output: 
+  polynomials representing the parametrization.
+  If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
+  If includeQs is false, then the polynomials are in the ring only with variables a and b's.
+(Created by mh, modified by rh on 2024-11-04)
+*-
+computeParametrization = method() 
+computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
+    nLeaves := #(getLeaves N);
+    y := getConverter M;
+    L := getReps M;
+    reticulations := getReticulationEdges N;
+    edges := getEdges N;
+    varList := flatten(apply(#edges, j -> {e_(edges#j), a_(edges#j), b_(edges#j)})) | toList(i_1..i_nLeaves);
+    S = QQ[varList]; -- this ring contains variables e, a, and b, each indexed by the edges
+    varSqList := apply((gens S)_{0..3*(#edges)-1}, j -> j^2);
+    R = S/(ideal varSqList); -- this quotient ring is the boolean ring created from S
+    sigma := generateSigma N; -- sigma is the state vector for each edge before deleting edges and evaluate
+    if includeQs then (
+        fourierCoordinates := toList apply(L,i->q_(y#(i#0),y#(i#1),y#(i#2))); -- List out the fourier coordinates (the q-variables)
+        ABQ = QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))]; -- ring with a's, b's and q's
+        --parameterizationWithQ := apply(parameterization, f -> substitute(f,ABQ));
+        parametrizationWithQ := apply(L, j -> q_(y#(j#0),y#(j#1),y#(j#2)) - generateQ(sigma,N,j)) -- define polynomials with q's in them
+    ) else (
+	 params := apply(L,j -> generateQ(sigma,N,j)); -- 
+         -- change the ring that the polynomials live in to have variables a's and b's (i.e., to use QQ[a...,b...] rather than QQ[a...,b..,e...,i...])
+         AB = QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
+         parameterizationWithQ := apply(params, f -> sub(f,AB))
+    )
+)
+
 generateSigma = method()
 generateSigma Network := N -> (
     EPListSorted := getEdges N;
@@ -7,11 +46,10 @@ generateSigma Network := N -> (
     numV := #(unique flatten  EPListSorted);
     leafList := EPListSorted_{0..nLeaves-1};
     edgeList := EPListSorted_{nLeaves..#EPListSorted - 1};
-    -- Initiate a mutable matrix A with all entries 0
-    A := mutableIdentity(R,numV); for i from 0 to numV-1 do A_(i,i) = 0;
+    A := mutableIdentity(R,numV); for i from 0 to numV-1 do A_(i,i) = 0; -- initiate a mutable matrix A with all entries 0
     -*
-    Construct A with e_ij on the leaf positions (A_ij) and e_kl on the 
-    internal edges positions (both A_kl and A_lk)
+    The following two chunks of code construct an adjacent matrix A with e_ij on the leaf 
+    positions (A_ij) and e_kl on the internal edges positions (both A_kl and A_lk)
     *-
     scan(leafList,pair -> A_(pair_1-1,pair_0-1)=e_pair);
     scan(edgeList,pair -> (
@@ -24,7 +62,7 @@ generateSigma Network := N -> (
     sigma = mutableMatrix v;
     for j from 1 to #EPListSorted do sigma = sigma + (A^j)*(mutableMatrix v);
     transpose matrix{apply(numRows sigma, j -> sum flatten entries (coefficients sigma_(j,0))_0)}
-    )
+)
 
 generateQ = method()
 generateQ (Matrix,Network,Sequence) := (sigma,N,seq) -> (
@@ -76,6 +114,9 @@ iMap (Sequence,ZZ) := (seq,n) -> (
     return (F1,F2);
     )
 
+-*
+
+*-
 addEdge = method()
 addEdge (Network, List) := (N, EP) -> (
     -- Network should be given as a pair = {edge list, reticulation pair list}.
@@ -96,7 +137,8 @@ addEdge (Network, List) := (N, EP) -> (
     newNetworkEdges = delete(edge2Reversed, newNetworkEdges);
     newNetworkEdges = newNetworkEdges | edgesToAdd;
     newNetwork = {newNetworkEdges, network_1 | newReticulations};
-    newNetwork )
+    newNetwork
+)
 -- -- COMMENTARY: Here's an example of how to use addEdge:
 -- edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
 -- reticulations = {{{6,7},{7,8}}};
@@ -104,38 +146,6 @@ addEdge (Network, List) := (N, EP) -> (
 -- exampleNetwork2 = addEdge(exampleNetwork,{{1,8},{7,2}}) 
 -- p = fourLeafParameterization(exampleNetwork2, false)
 
-fourLeafParameterization = method() 
-fourLeafParameterization (List, Boolean) := (network, includeQs) -> (
-    -- Compute the parameterization of a 4-leaf network under the JC model.
-    -- Input is a network, which is a list {edge list, reticulation list}, and a
-    -- boolean variable includeQs, which specifies whether or not to include the
-    -- Fourier coordinates in the output. Last updated 2024-10-22 by mh
-    nLeaves = 4;
-    y = hashTable{A => 0, C => 1, G => 2, T => 3};
-    L={(A,A,A,A),(A,A,C,C),(A,C,C,A),(A,C,A,C),(A,C,G,T),(C,A,C,A),(C,A,A,C),(C,A,G,T),(C,C,A,A),(C,C,C,C),(C,G,T,A),(C,G,C,G),(C,G,A,T),(C,C,G,G),(C,G,G,C)};
-    reticulations = network_1;
-    edges = network_0;
-    edges = sort apply(#edges, j -> sort edges#j); -- sort the edges
-    varList = flatten(apply(#edges, j -> {e_(edges#j), a_(edges#j), b_(edges#j)})) | toList(i_1..i_nLeaves); -- make a list of variables e, a, and b, each indexed by the edges
-    S = QQ[varList];
-    varSqList = apply((gens S)_{0..3*(#edges)-1}, j -> j^2); -- square the variables
-    R = S/(ideal varSqList);
-    sigma = generateSigma(edges,nLeaves); -- I don't know what this does
-    parameterization = apply(L,j -> generateQ(sigma,reticulations,j,edges));
-    if includeQs 
-    then (
-        fourierCoordinates = toList apply(L,i->q_(y#(i#0),y#(i#1),y#(i#2))); -- List out the fourier coordinates (the q-variables)
-        BQ = QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))]; -- ring with a's, b's and q's
-        parameterization = apply(parameterization, f -> substitute(f,BQ));
-        polynomials = apply(L, j -> q_(y#(j#0),y#(j#1),y#(j#2)) - generateQ(sigma,reticulations,j,edges)); -- define polynomials with q's in them
-        return polynomials; ) 
-    else (
-         -- change the ring that the polynomials live in to have variables a's and b's (i.e., to use QQ[a...,b...] rather than QQ[a...,b..,e...,i...])
-         B = QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
-         parameterization = apply(parameterization, f -> substitute(f,B));
-         return parameterization;
-         )
-     )
 
 computeDimensionNumerically = method()
 computeDimensionNumerically (List) := (parameterization) -> (
