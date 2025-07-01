@@ -15,6 +15,11 @@ Output:
 *-
 computeParametrization = method() 
 computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
+    a := local a;
+    b := local b;
+    e := local e;
+    i := local i;
+    q := local q;
     nLeaves := #(getLeaves N);
     y := getConverter M;
     L := getRepresentatives M;
@@ -40,6 +45,7 @@ computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
 
 generateSigma = method()
 generateSigma (Network,Ring) := (N,R) -> (
+    Rvars := flatten entries vars R;
     EPListSorted := getEdges N;
     nLeaves := #(getLeaves N);
     numV := #(unique flatten  EPListSorted);
@@ -51,15 +57,19 @@ generateSigma (Network,Ring) := (N,R) -> (
     The following two lines of code construct an adjacent matrix A with e_ij on the leaf 
     positions (A_ij) and e_kl on the internal edges positions (both A_kl and A_lk)
     *-
-    scan(leafList,pair -> matA_(pair_1-1,pair_0-1)=e_pair);
-    scan(edgeList,pair -> (
+    scan(#leafList,j -> (
+        pair := leafList_j;
+        matA_(pair_1-1,pair_0-1)=Rvars_(1+j*3);)
+    );
+    scan(#edgeList,k -> (
+        pair := edgeList_k;
 	    x := pair_0-1;
 	    y := pair_1-1;
-	    matA_(y,x) = e_pair;
-	    matA_(x,y) = e_pair;
+	    matA_(y,x) = Rvars_(#leafList+1+k*3);
+	    matA_(x,y) = Rvars_(#leafList+1+k*3);
 	    ));
     -- v is the initial state with first nleaves entries (i_leafIndex) and 0 otherwise 
-    v := transpose matrix{toList (i_1..i_nLeaves)|apply(numV-nLeaves,j -> 0)};
+    v := transpose matrix{Rvars_{-nLeaves..-1}|apply(numV-nLeaves,j -> 0)};
     -- Find sigma
     sigma := mutableMatrix sub(v,R);
     for j from 1 to #EPListSorted do sigma = sigma + (matA^j)*(mutableMatrix v);
@@ -68,38 +78,39 @@ generateSigma (Network,Ring) := (N,R) -> (
 
 generateQ = method()
 generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,seq,R) -> (
+    Rvars := flatten entries vars R;
     W := ZZ/2;
     reticulationPairList := getReticulationEdges N;
     EPListSorted := getEdges N;
-    reticulationPairs := apply(reticulationPairList,j->apply(j,l->e_l));
+    reticulationPairs := apply(reticulationPairList,j->apply(j,l->findVariable(Rvars,concatenate("e_",toString l))));
     (F1,F2) := iMap(seq,#EPListSorted,R);
     k := #reticulationPairs;
     discardedReticulation := apply(2^k,j -> apply(k,l -> reticulationPairs#l#(floor((j%(2^(l+1)))/(2^l)))));
     out := 0;
-    edgeVars := apply(#EPListSorted, j -> e_(EPListSorted#j));
+    edgeVariables := apply(#EPListSorted, j -> findVariable(Rvars,concatenate("e_",toString EPListSorted#j)));
     remainingEdges := null;
     for pair in discardedReticulation do (
-	remainingEdges = edgeVars;
+	remainingEdges = edgeVariables;
 	for p in pair do remainingEdges = delete(p,remainingEdges);
 	prod := 1;
-	for e in remainingEdges do (
-	    	endPoints := value substring(2,toString e);
-		zeroEdges := apply(#pair,j -> pair#j => 0)|{e => 0};
+	for ed in remainingEdges do (
+        endPoints := value substring(2,toString ed);
+		zeroEdges := apply(#pair,j -> pair#j => 0)|{ed => 0};
 		sigmaV := sub(sigma_(endPoints_0-1,0),zeroEdges);
-    	    	sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
+        sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
 		if (sigmaV == 0 or sigmaW == 0) then (
-		    prod = prod*a_endPoints;
+		        prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints));
 		    )else(
 	    	    oneEdges := apply(#remainingEdges,j -> remainingEdges#j => 1);
-		    factorV := sub(sigmaV,oneEdges);
-    	    	    factorW := sub(sigmaW,oneEdges);
-		    element1 := F1 (factorV);
-		    element2 := F2 (factorV);
-		    if (element1 == 0_W and element2 == 0_W) then (
-			prod = prod*a_endPoints
-			)else(
-			prod = prod*b_endPoints
-			);
+		        factorV := sub(sigmaV,oneEdges);
+                factorW := sub(sigmaW,oneEdges);
+		        element1 := F1 (factorV);
+		        element2 := F2 (factorV);
+		        if (element1 == 0_W and element2 == 0_W) then (
+			        prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints))
+			    )else(
+			        prod = prod*findVariable(Rvars,concatenate("b_",toString endPoints))
+			    );
 		    )		
 	    );
 	out = out + prod;
@@ -162,3 +173,8 @@ computeDimensionNumerically (List) := (parameterization) -> (
     J0 := sub(J1, randomValues); -- substitute in the random variables
     out := rank J0
     )
+
+findVariable = method()
+findVariable(List,String) := (varList,varString) -> (
+    first select(varList,x -> toString x == varString)
+)

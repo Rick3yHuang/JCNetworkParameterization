@@ -26,15 +26,9 @@ end
 
 restart
 needsPackage "PhylogeneticsIdentifiability"
-needsPackage "Graphs"
-needsPackage "Visualize"
 needs "PhylogeneticsIdentifiability/TESTS/Test-Parameter-Generation.m2"
 -- Sanity checks
 peek N4Leaves
 peek M4Leaves
-G = graph getEdges N4Leaves
-openPort "8080"
-visualize G
---Compute parametrizations
 computeParametrization(N4Leaves,M4Leaves,false) -- parametrization without the Fourier coordinates
 computeParametrization(N4Leaves,M4Leaves,true) -- parametrization with the Fourier coordinates
