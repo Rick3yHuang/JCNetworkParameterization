@@ -5,13 +5,13 @@ newPackage("PhylogeneticsIdentifiability",
     Date => "June 10, 2025",
     Authors => {
 	{Name => "Hawai`i Phylogentics Identifibillity group"
-	    --Email => "rickey.huang747@gmail.com",
-	    --HomePage => "https://sites.gatech.edu/rickeyhuang77/"
+	    --Email => 
+	    --HomePage => 
 	    }
 	},
     Headline => "Phylogenetics Identifibality Package",
     Keywords => {"Phylogentics"},
-    PackageImports => {"Graphs"},
+    PackageImports => {},
     DebuggingMode => true
     )
 
@@ -55,6 +55,5 @@ restart
 uninstallPackage "PhylogeneticsIdentifiability"
 installPackage "PhylogeneticsIdentifiability"
 needsPackage "PhylogeneticsIdentifiability"
-debug "PhylogeneticsIdentifiability"
-check "PhylogeneticsIdentifiability"
+--check "PhylogeneticsIdentifiability"
 

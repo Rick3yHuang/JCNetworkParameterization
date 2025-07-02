@@ -34,7 +34,7 @@ computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
         fourierCoordinates := toList apply(L,j->q_(y#(j#0),y#(j#1),y#(j#2))); -- List out the fourier coordinates (the q-variables)
         ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))]; -- ring with a's, b's and q's
         --parameterizationWithQ := apply(parameterization, f -> substitute(f,ABQ));
-        parametrizationWithQ := apply(L, j -> q_(y#(j#0),y#(j#1),y#(j#2)) - generateQ(sigma,N,j,R)) -- define polynomials with q's in them
+        parametrizationWithQ := apply(L, j -> sub(q_(y#(j#0),y#(j#1),y#(j#2)),ABQ) - sub(generateQ(sigma,N,j,R),ABQ)) -- define polynomials with q's in them
     ) else (
 	 params := apply(L,j -> generateQ(sigma,N,j,R));
          -- change the ring that the polynomials live in to have variables a's and b's (i.e., to use QQ[a...,b...] rather than QQ[a...,b..,e...,i...])

@@ -26,7 +26,7 @@ end
 
 restart
 needsPackage "PhylogeneticsIdentifiability"
-needs "PhylogeneticsIdentifiability/TESTS/Test-Parameter-Generation.m2"
+needs "PhylogeneticsIdentifiability/EXPERIMENTS/4-Leaf-Level-1-Parameter-Generation.m2"
 -- Sanity checks
 peek N4Leaves
 peek M4Leaves
