@@ -1,5 +1,5 @@
 -*- coding: utf-8 -*-
-newPackage("JCNetworkParametrization",
+newPackage("JCNetworkParameterization",
     AuxiliaryFiles => true, 
     Version => "0.1",
     Date => "June 10, 2025",
@@ -9,7 +9,7 @@ newPackage("JCNetworkParametrization",
 	    --HomePage => 
 	    }
 	},
-    Headline => "A phylogenetics identifibality package that implements methods for generating parametrizations of phylogenetic networks under the Jukes-Cantor model.",
+    Headline => "A phylogenetics identifiability package that implements methods for generating parameterizations of phylogenetic networks under the Jukes-Cantor model.",
     Keywords => {"Phylogentics"},
     PackageImports => {},
     DebuggingMode => true
@@ -24,36 +24,36 @@ export {
     "getEdges",
     -- Methods
     "iMap",
-    "computeParametrization",
+    "computeParameterization",
     "generateSigma",
     "generateQ"
     }
 
-baseDirectory = JCNetworkParametrization#"source directory"
+baseDirectory = JCNetworkParameterization#"source directory"
 --------------------------------------------------------------------
 ----- CODE
 --------------------------------------------------------------------
 -- Data
-load(baseDirectory | "JCNetworkParametrization/Network-Data-Type.m2")
+load(baseDirectory | "JCNetworkParameterization/Network-Data-Type.m2")
 -- Methods
-load(baseDirectory | "JCNetworkParametrization/Parametrization-Generation.m2")
+load(baseDirectory | "JCNetworkParameterization/Parameterization-Generation.m2")
 --------------------------------------------------------------------
 ----- TESTS
 --------------------------------------------------------------------
---load(baseDirectory | "JCNetworkParametrization/TESTS/Test-Parameter-Generation.m2")
+--load(baseDirectory | "JCNetworkParameterization/TESTS/Test-Parameter-Generation.m2")
 --------------------------------------------------------------------
 ----- DOCUMENTATION
 --------------------------------------------------------------------
 beginDocumentation()
-load(baseDirectory | "JCNetworkParametrization/Documentation.m2")
+load(baseDirectory | "JCNetworkParameterization/Documentation.m2")
 end
 
 --------------------------------------------------------------------
 ----- SCRATCH SPACE
 --------------------------------------------------------------------
 restart
-uninstallPackage "JCNetworkParametrization"
-installPackage "JCNetworkParametrization"
-needsPackage "JCNetworkParametrization"
---check "JCNetworkParametrization"
+uninstallPackage "JCNetworkParameterization"
+installPackage "JCNetworkParameterization"
+needsPackage "JCNetworkParameterization"
+--check "JCNetworkParameterization"
 

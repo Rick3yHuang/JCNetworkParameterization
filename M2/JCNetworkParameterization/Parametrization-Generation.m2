@@ -1,5 +1,5 @@
 
------------------------------------  Find Parametrization ----------------------------------------
+-----------------------------------  Find Parameterization ----------------------------------------
 
 -*
 Compute the parameterization of a network under thea given model
@@ -8,13 +8,13 @@ Input:
   M -- a modle M of Model type
   includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
 Output: 
-  polynomials representing the parametrization.
+  polynomials representing the parameterization.
   If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
   If includeQs is false, then the polynomials are in the ring only with variables a and b's.
 (Created by mh, modified by rh on 2024-11-04)
 *-
-computeParametrization = method() 
-computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
+computeParameterization = method() 
+computeParameterization (Network, Model, Boolean) := (N,M,includeQs) -> (
     a := local a;
     b := local b;
     e := local e;
@@ -34,7 +34,7 @@ computeParametrization (Network, Model, Boolean) := (N,M,includeQs) -> (
         fourierCoordinates := toList apply(L,j->q_(y#(j#0),y#(j#1),y#(j#2))); -- List out the fourier coordinates (the q-variables)
         ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))]; -- ring with a's, b's and q's
         --parameterizationWithQ := apply(parameterization, f -> substitute(f,ABQ));
-        parametrizationWithQ := apply(L, j -> sub(q_(y#(j#0),y#(j#1),y#(j#2)),ABQ) - sub(generateQ(sigma,N,j,R),ABQ)) -- define polynomials with q's in them
+        parameterizationWithQ := apply(L, j -> sub(q_(y#(j#0),y#(j#1),y#(j#2)),ABQ) - sub(generateQ(sigma,N,j,R),ABQ)) -- define polynomials with q's in them
     ) else (
 	 params := apply(L,j -> generateQ(sigma,N,j,R));
          -- change the ring that the polynomials live in to have variables a's and b's (i.e., to use QQ[a...,b...] rather than QQ[a...,b..,e...,i...])
