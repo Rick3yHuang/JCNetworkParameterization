@@ -1,5 +1,3 @@
-
------------------------------------  Find Parameterization ----------------------------------------
 -*
 Compute the parameterization of a network under thea given model
 Input: 
@@ -102,6 +100,7 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
     reticulationPairList := getReticulationEdges N; EPListSorted := getEdges N;
     reticulationPairs := apply(reticulationPairList,j->apply(j,l->findVariable(Rvars,concatenate("e_",toString l))));
     (F1,F2) := iMap(nucleotideSequence,#EPListSorted,R);
+    -- Enumerate all 2^k possible display trees (choose one incoming edge per reticulation)
     k := #reticulationPairs;
     discardedReticulation := apply(2^k,j -> apply(k,l -> reticulationPairs#l#(floor((j%(2^(l+1)))/(2^l)))));
     out := 0;
@@ -112,17 +111,22 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
 	prod := 1;
 	for ed in remainingEdges do (
 	    endPoints := value substring(2,toString ed);
+	    -- Set edge ed = 0 to disconnect the two subtrees for evaluating Σ
 	    zeroEdges := apply(#pair,j -> pair#j => 0)|{ed => 0};
 	    sigmaV := sub(sigma_(endPoints_0-1,0),zeroEdges);
 	    sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
+	    -- If both endpoints correspond to the trivial group element multiply by a_{v,w}
 	    if (sigmaV == 0 or sigmaW == 0) then (
 		prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints));
 		)else(
+		-- Otherwise evaluate the group-sum factor via Σ
 		oneEdges := apply(#remainingEdges,j -> remainingEdges#j => 1);
 		factorV := sub(sigmaV,oneEdges);
 		factorW := sub(sigmaW,oneEdges);
+		-- Compute group components (F1,F2) applied to factorV
 		element1 := F1 factorV;
 		element2 := F2 factorV;
+		-- If group element is (0,0) → use a_{v,w}, else b_{v,w}
 		if (element1 == 0_W and element2 == 0_W) then (
 		    prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints))
 		    )else(
@@ -139,7 +143,7 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
 -- Helpers---------------------------------------------------
 -------------------------------------------------------------
 
--- COMMENTARY: This function maps a nucleotide sequence to a finite Abelian group element
+-- This function returns two additive group maps (F1,F2): G^n -> W corresponding to a nucleotide sequence
 iMap = method()
 iMap (Sequence,ZZ,Ring) := (nucleotideSeq,n,R) -> (
     W := ZZ/2;
