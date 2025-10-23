@@ -32,12 +32,12 @@ undocumented {
 
 doc ///
   Key
-   PhylogeneticsIdentifiability
+   JCNetworkParameterization
   Headline
      A Macaulay2 package to work with Phylogenetics Identifiability.
   Description
    Text
-    {\em PhylogeneticsIdentifiability} is a package that can find the parameterization of a given network
+    {\em JCNetworkParameterization} is a package that can find the parameterization of a given network
 --  Caveat
   Subnodes
     computeParameterization

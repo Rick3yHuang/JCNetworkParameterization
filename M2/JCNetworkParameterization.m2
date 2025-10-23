@@ -9,7 +9,7 @@ newPackage("JCNetworkParameterization",
 	    --HomePage => 
 	    }
 	},
-    Headline => "A phylogenetics identifiability package that implements methods for generating parameterizations of phylogenetic networks under the Jukes-Cantor model.",
+    Headline => "A phylogenetics identifiability package",
     Keywords => {"Phylogentics"},
     PackageImports => {},
     DebuggingMode => true
@@ -26,7 +26,9 @@ export {
     "iMap",
     "computeParameterization",
     "generateSigma",
-    "generateQ"
+    "generateQ",
+    -- Optional Inputs
+    "includeQs"
     }
 
 baseDirectory = JCNetworkParameterization#"source directory"

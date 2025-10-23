@@ -1,55 +1,64 @@
 
 -----------------------------------  Find Parameterization ----------------------------------------
-
 -*
 Compute the parameterization of a network under thea given model
 Input: 
-  N -- a network of Network type
-  M -- a modle M of Model type
-  includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
+N	  -- a network of Network type
+M	  -- a modle M of Model type
+Optional Input:
+includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
 Output: 
-  polynomials representing the parameterization.
-  If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
-  If includeQs is false, then the polynomials are in the ring only with variables a and b's.
+polynomials representing the parameterization.
+
+If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
+If includeQs is false, then the polynomials are in the ring only with variables a and b's.
 (Created by mh, modified by rh on 2024-11-04)
 *-
-computeParameterization = method() 
-computeParameterization (Network, Model, Boolean) := (N,M,includeQs) -> (
+computeParameterization = method(Options => {includeQs => true}) 
+computeParameterization (Network, Model) := o-> (N,M) -> (
     a := local a;
     b := local b;
     e := local e;
     i := local i;
     q := local q;
     nLeaves := #(getLeaves N);
-    y := getConverter M;
-    L := getRepresentatives M;
-    reticulations := getReticulationEdges N;
-    edges := getEdges N;
+    y := getTransformTable M; L := getNucleotideSequence M;
+    reticulations := getReticulationEdges N; edges := getEdges N;
+    
+    -- Constructing the boolean (quotation) ring R = QQ[e_,a_,b_,i_]/(e_^2, a_^2, b_^2, i_^2)
     varList := flatten(apply(#edges, j -> {e_(edges#j), a_(edges#j), b_(edges#j)})) | toList(i_1..i_nLeaves);
     S := QQ[varList]; -- this ring contains variables e, a, and b, each indexed by the edges
     varSqList := apply((gens S)_{0..3*(#edges)-1}, j -> j^2);
-    R := S/(ideal varSqList); -- this quotient ring is the boolean ring created from S
+    R := S/(ideal varSqList);
     sigma := generateSigma(N,R); -- sigma is the state vector for each edge before deleting edges and evaluate
-    if includeQs then (
-        fourierCoordinates := toList apply(L,j->q_(y#(j#0),y#(j#1),y#(j#2))); -- List out the fourier coordinates (the q-variables)
-        ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))]; -- ring with a's, b's and q's
-        --parameterizationWithQ := apply(parameterization, f -> substitute(f,ABQ));
-        parameterizationWithQ := apply(L, j -> sub(q_(y#(j#0),y#(j#1),y#(j#2)),ABQ) - sub(generateQ(sigma,N,j,R),ABQ)) -- define polynomials with q's in them
-    ) else (
-	 params := apply(L,j -> generateQ(sigma,N,j,R));
-         -- change the ring that the polynomials live in to have variables a's and b's (i.e., to use QQ[a...,b...] rather than QQ[a...,b..,e...,i...])
-         AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
-         parameterizationWithQ := apply(params, f -> sub(f,AB))
+    
+    -- List out the fourier coordinates (the q-variables)
+    fourierCoordinates := toList apply(L,j-> q_(toSequence apply(#j, k -> y#(j#k)))); 
+    ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
+    out := apply(#L, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(generateQ(sigma,N,L#j,R),ABQ));	   
+    if not o#includeQs then (
+	parameterization := apply(L,j -> generateQ(sigma,N,j,R));
+	AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
+	out = apply(parameterization, f -> sub(f,AB));
+	);
+    out
     )
-)
 
+-*
+This function generates the state matrix for a given network N in the ring R
+Input:
+N -- a network of Network type
+R -- the ring in which the parameterization is computed
+Output:
+a state matrix sigma in R representing the states at each node of the network N
+*-
 generateSigma = method()
 generateSigma (Network,Ring) := (N,R) -> (
     Rvars := flatten entries vars R;
     EPListSorted := getEdges N;
     nLeaves := #(getLeaves N);
     numV := #(unique flatten  EPListSorted);
-    leafList := EPListSorted_{0..nLeaves-1};
+    leafEdgeList := EPListSorted_{0..nLeaves-1};
     edgeList := EPListSorted_{nLeaves..#EPListSorted - 1};
     matA := mutableIdentity(R,numV);
     for i from 0 to numV-1 do matA_(i,i) = 0; -- initiate a mutable matrix A with all entries 0
@@ -57,16 +66,16 @@ generateSigma (Network,Ring) := (N,R) -> (
     The following two lines of code construct an adjacent matrix A with e_ij on the leaf 
     positions (A_ij) and e_kl on the internal edges positions (both A_kl and A_lk)
     *-
-    scan(#leafList,j -> (
-        pair := leafList_j;
-        matA_(pair_1-1,pair_0-1)=Rvars_(1+j*3);)
-    );
+    scan(#leafEdgeList,j -> (
+	    pair := leafEdgeList_j;
+	    matA_(pair_1-1,pair_0-1)=Rvars_(1+j*3);)
+	);
     scan(#edgeList,k -> (
-        pair := edgeList_k;
+	    pair := edgeList_k;
 	    x := pair_0-1;
 	    y := pair_1-1;
-	    matA_(y,x) = Rvars_(#leafList+1+k*3);
-	    matA_(x,y) = Rvars_(#leafList+1+k*3);
+	    matA_(y,x) = Rvars_(#leafEdgeList+1+k*3);
+	    matA_(x,y) = Rvars_(#leafEdgeList+1+k*3);
 	    ));
     -- v is the initial state with first nleaves entries (i_leafIndex) and 0 otherwise 
     v := transpose matrix{Rvars_{-nLeaves..-1}|apply(numV-nLeaves,j -> 0)};
@@ -74,61 +83,74 @@ generateSigma (Network,Ring) := (N,R) -> (
     sigma := mutableMatrix sub(v,R);
     for j from 1 to #EPListSorted do sigma = sigma + (matA^j)*(mutableMatrix v);
     transpose matrix{apply(numRows sigma, j -> sum flatten entries (coefficients sigma_(j,0))_0)}
-)
+    )
 
+-*
+This function generates a polynomial for a given sequence of nucleotides (ACGT) under network N
+Input:
+sigma		   -- the state matrix generated by generateSigma
+N		   -- a network of Network type
+nucleotideSequence -- a sequence of nucleotides (ACGT) represented as a list of representatives from the model M
+R		   -- the ring in which the parameterization is computed
+Output:
+a polynomial in R representing the parameterization of the model for the given sequence under the network N
+*-
 generateQ = method()
-generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,seq,R) -> (
+generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
     Rvars := flatten entries vars R;
     W := ZZ/2;
-    reticulationPairList := getReticulationEdges N;
-    EPListSorted := getEdges N;
+    reticulationPairList := getReticulationEdges N; EPListSorted := getEdges N;
     reticulationPairs := apply(reticulationPairList,j->apply(j,l->findVariable(Rvars,concatenate("e_",toString l))));
-    (F1,F2) := iMap(seq,#EPListSorted,R);
+    (F1,F2) := iMap(nucleotideSequence,#EPListSorted,R);
     k := #reticulationPairs;
     discardedReticulation := apply(2^k,j -> apply(k,l -> reticulationPairs#l#(floor((j%(2^(l+1)))/(2^l)))));
     out := 0;
     edgeVariables := apply(#EPListSorted, j -> findVariable(Rvars,concatenate("e_",toString EPListSorted#j)));
-    remainingEdges := null;
+    remainingEdges := edgeVariables;
     for pair in discardedReticulation do (
-	remainingEdges = edgeVariables;
 	for p in pair do remainingEdges = delete(p,remainingEdges);
 	prod := 1;
 	for ed in remainingEdges do (
-        endPoints := value substring(2,toString ed);
-		zeroEdges := apply(#pair,j -> pair#j => 0)|{ed => 0};
-		sigmaV := sub(sigma_(endPoints_0-1,0),zeroEdges);
-        sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
-		if (sigmaV == 0 or sigmaW == 0) then (
-		        prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints));
+	    endPoints := value substring(2,toString ed);
+	    zeroEdges := apply(#pair,j -> pair#j => 0)|{ed => 0};
+	    sigmaV := sub(sigma_(endPoints_0-1,0),zeroEdges);
+	    sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
+	    if (sigmaV == 0 or sigmaW == 0) then (
+		prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints));
+		)else(
+		oneEdges := apply(#remainingEdges,j -> remainingEdges#j => 1);
+		factorV := sub(sigmaV,oneEdges);
+		factorW := sub(sigmaW,oneEdges);
+		element1 := F1 factorV;
+		element2 := F2 factorV;
+		if (element1 == 0_W and element2 == 0_W) then (
+		    prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints))
 		    )else(
-	    	    oneEdges := apply(#remainingEdges,j -> remainingEdges#j => 1);
-		        factorV := sub(sigmaV,oneEdges);
-                factorW := sub(sigmaW,oneEdges);
-		        element1 := F1 (factorV);
-		        element2 := F2 (factorV);
-		        if (element1 == 0_W and element2 == 0_W) then (
-			        prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints))
-			    )else(
-			        prod = prod*findVariable(Rvars,concatenate("b_",toString endPoints))
-			    );
-		    )		
+		    prod = prod*findVariable(Rvars,concatenate("b_",toString endPoints))
+		    );
+		)
 	    );
 	out = out + prod;
-	--print out;
 	);
-   out
-)
+    out
+    )
 
+-------------------------------------------------------------
+-- Helpers---------------------------------------------------
+-------------------------------------------------------------
+
+-- COMMENTARY: This function maps a nucleotide sequence to a finite Abelian group element
 iMap = method()
-iMap (Sequence,ZZ,Ring) := (seq,n,R) -> (
+iMap (Sequence,ZZ,Ring) := (nucleotideSeq,n,R) -> (
     W := ZZ/2;
-    h1 := hashTable{"representativeA" => 0_W, "representativeC" => 0_W, "representativeG" => 1_W, "representativeT" => 1_W};
-    h2 := hashTable{"representativeA" => 0_W, "representativeC" => 1_W, "representativeG" => 0_W, "representativeT" => 1_W};
-    F1 := map(W,R,apply(3*n,j->0)|apply(toList seq,j -> h1#("representative"|toString j)));
-    F2 := map(W,R,apply(3*n,j->0)|apply(toList seq,j -> h2#("representative"|toString j)));
+    h1 := hashTable{"nucleotideA" => 0_W, "nucleotideC" => 0_W, "nucleotideG" => 1_W, "nucleotideT" => 1_W};
+    h2 := hashTable{"nucleotideA" => 0_W, "nucleotideC" => 1_W, "nucleotideG" => 0_W, "nucleotideT" => 1_W};
+    F1 := map(W,R,apply(3*n,j->0)|apply(toList nucleotideSeq,j -> h1#("nucleotide"|toString j)));
+    F2 := map(W,R,apply(3*n,j->0)|apply(toList nucleotideSeq,j -> h2#("nucleotide"|toString j)));
     return (F1,F2);
     )
 
+-- This function adds a new edge to a network by subdividing two existing edges
 addNetworkEdge = method()
 addNetworkEdge (List, List) := (network, EP) -> (
     -- Network should be given as a pair = {edge list, reticulation pair list}.
@@ -150,7 +172,7 @@ addNetworkEdge (List, List) := (network, EP) -> (
     newNetworkEdges = newNetworkEdges | edgesToAdd;
     newNetwork := {newNetworkEdges, network_1 | newReticulations};
     newNetwork
-)
+    )
 -- -- COMMENTARY: Here's an example of how to use addEdge:
 -- edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
 -- reticulations = {{{6,7},{7,8}}};
@@ -158,9 +180,9 @@ addNetworkEdge (List, List) := (network, EP) -> (
 -- exampleNetwork2 = addEdge(exampleNetwork,{{1,8},{7,2}}) 
 -- p = fourLeafParameterization(exampleNetwork2, false)
 
-
+-- This function computes the dimension of a parameterization numerically
 computeDimensionNumerically = method()
-computeDimensionNumerically (List) := (parameterization) -> (
+computeDimensionNumerically List := parameterization -> (
     -- Compute the dimension of the parameterization numerically. Input takes
     -- the form of a parameterization without q's, i.e., of the form of the
     -- output of fourLeafParameterization with includeQs=false. Note: this
@@ -174,7 +196,8 @@ computeDimensionNumerically (List) := (parameterization) -> (
     out := rank J0
     )
 
+-- This function finds a variable in a list of variables given its string name
 findVariable = method()
 findVariable(List,String) := (varList,varString) -> (
     first select(varList,x -> toString x == varString)
-)
+    )
