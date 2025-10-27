@@ -4,15 +4,17 @@ newPackage("JCNetworkParameterization",
     Version => "0.1",
     Authors => {
 		{Name => "Hawai`i Phylogentics Identifibillity group"
-		    --Email => 
+		    --Email => rhuang346@gatech.edu
 		    --HomePage => 
 		    }
 		},
+    HomePage => "https://github.com/Rick3yHuang/JCNetworkParameterization",
     Date => "June 10, 2025",
     Headline => "A phylogenetics identifiability package",
     Keywords => {"Phylogentics"},
     PackageImports => {},
-    DebuggingMode => true
+    DebuggingMode => true,
+    Configuration => {}
     )
 
 export {
@@ -26,7 +28,6 @@ export {
     "getNucleotideSequence",
     "getTransformTable",
     -- Methods
-    "iMap",
     "computeParameterization",
     "generateSigma",
     "generateQ",
@@ -60,5 +61,6 @@ end
 restart
 uninstallPackage "JCNetworkParameterization"
 installPackage "JCNetworkParameterization"
+viewHelp "JCNetworkParameterization"
 needsPackage "JCNetworkParameterization"
 --check "JCNetworkParameterization"
