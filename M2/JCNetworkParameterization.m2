@@ -22,13 +22,15 @@ export {
     "getNetwork",
     "getModel",
     "getEdges",
+    "getReticulationEdges",
+    "getNucleotideSequence",
+    "getTransformTable",
     -- Methods
     "iMap",
     "computeParameterization",
     "generateSigma",
     "generateQ",
     "addNetworkEdge",
-    "addNetworkEdgeOld",
     -- Optional Inputs
     "includeQs"
     }
