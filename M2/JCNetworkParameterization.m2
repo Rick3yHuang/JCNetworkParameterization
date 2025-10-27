@@ -1,14 +1,14 @@
 -*- coding: utf-8 -*-
 newPackage("JCNetworkParameterization",
-    AuxiliaryFiles => true, 
+    AuxiliaryFiles => true,
     Version => "0.1",
-    Date => "June 10, 2025",
     Authors => {
-	{Name => "Hawai`i Phylogentics Identifibillity group"
-	    --Email => 
-	    --HomePage => 
-	    }
-	},
+		{Name => "Hawai`i Phylogentics Identifibillity group"
+		    --Email => 
+		    --HomePage => 
+		    }
+		},
+    Date => "June 10, 2025",
     Headline => "A phylogenetics identifiability package",
     Keywords => {"Phylogentics"},
     PackageImports => {},
@@ -27,6 +27,8 @@ export {
     "computeParameterization",
     "generateSigma",
     "generateQ",
+    "addNetworkEdge",
+    "addNetworkEdgeOld",
     -- Optional Inputs
     "includeQs"
     }
@@ -58,4 +60,3 @@ uninstallPackage "JCNetworkParameterization"
 installPackage "JCNetworkParameterization"
 needsPackage "JCNetworkParameterization"
 --check "JCNetworkParameterization"
-

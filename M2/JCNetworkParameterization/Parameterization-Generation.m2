@@ -154,35 +154,45 @@ iMap (Sequence,ZZ,Ring) := (nucleotideSeq,n,R) -> (
     return (F1,F2);
     )
 
--- This function adds a new edge to a network by subdividing two existing edges
 addNetworkEdge = method()
-addNetworkEdge (List, List) := (network, EP) -> (
-    -- Network should be given as a pair = {edge list, reticulation pair list}.
-    -- EP should be the two edges that will be subdivided in order to add a new
-    -- edge. New reticulation will be on the second edge listed in EP. NOTE: the
-    -- direction of the reticulation is determined by whether the second edge in
-    -- EP is input as {x,y} or {y,x}. Last updated: 2024-10-22 by mh
-    m := max flatten network_0;
-    edge1 := EP_0;
-    edge2 := EP_1;
-    edge1Reversed := {EP_0#1,EP_0#0};
-    edge2Reversed := {EP_1#1,EP_1#0};
-    edgesToAdd := { {edge1_0, m + 1}, {edge1_1, m+1}, {edge2_0, m+2}, {edge2_1, m+2}, {m+1, m+2} };
-    newReticulations := {{{m +1, m+2}, {edge2_0, m+2}}};
-    newNetworkEdges := delete(edge1, network_0);
-    newNetworkEdges = delete(edge1Reversed, newNetworkEdges);
-    newNetworkEdges = delete(edge2, newNetworkEdges);
-    newNetworkEdges = delete(edge2Reversed, newNetworkEdges);
-    newNetworkEdges = newNetworkEdges | edgesToAdd;
-    newNetwork := {newNetworkEdges, network_1 | newReticulations};
-    newNetwork
+addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
+    edges := getEdges N; reticulationEdges := getReticulationEdges N;
+    leaves := getLeaves N; level := getLevel N;
+    numVertices := max flatten edges;
+    scan(edgesToDivide,e -> assert(#select(reticulationEdges,r -> r_0 == e or r_1 == e) == 0));
+    (edgeToDivide1,edgeToDivide2) := toSequence edgesToDivide;
+    edgesToAdd := {{edgeToDivide1_0,numVertices+1},{edgeToDivide1_1,numVertices+1},
+	{edgeToDivide2_0,numVertices+2},{edgeToDivide2_1,numVertices+2},
+	{numVertices+1,numVertices+2}};
+    if #(select(edgeToDivide1,v -> v == vertexInNewReticulation)) != 0 then(
+	newReticulationEdges := {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+1}}};
+	) else (
+	newReticulationEdges = {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+2}}};
+	);
+    getNetwork(edges|edgesToAdd,leaves,reticulationEdges|newReticulationEdges)
     )
--- -- COMMENTARY: Here's an example of how to use addEdge:
--- edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
--- reticulations = {{{6,7},{7,8}}};
--- exampleNetwork = {edges,reticulations}
--- exampleNetwork2 = addEdge(exampleNetwork,{{1,8},{7,2}}) 
--- p = fourLeafParameterization(exampleNetwork2, false)
+-* Here's an example of how to use addEdge:
+edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
+reticulations = {{{6,7},{7,8}}};
+leaves = {1,2,3,4};
+exampleNetwork = getNetwork(edges,leaves,reticulations)
+exampleNetwork2 = addNetworkEdge(exampleNetwork,{{1,8},{7,2}},7)
+peek oo
+*-
+
+addNetworkEdge (Network,List,List) := (N,edgesToDivideList,vertexInNewReticulationList) -> (
+    outNetwork := N;
+    scan(#edgesToDivideList,i -> outNetwork = addNetworkEdge(outNetwork,edgesToDivideList_i,vertexInNewReticulationList_i));
+    outNetwork
+    )
+-* Here's an example of how to use addEdge:
+edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
+reticulations = {{{6,7},{7,8}}};
+leaves = {1,2,3,4};
+exampleNetwork = getNetwork(edges,leaves,reticulations)
+exampleNetwork2 = addNetworkEdge(exampleNetwork,{{{1,8},{7,2}},{{3,6},{4,5}}},{7,3})
+peek oo
+*-
 
 -- This function computes the dimension of a parameterization numerically
 computeDimensionNumerically = method()
