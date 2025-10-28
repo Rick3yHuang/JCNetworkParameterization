@@ -54,7 +54,7 @@ load(baseDirectory | "JCNetworkParameterization/Documentation.m2")
 end
 
 --------------------------------------------------------------------
------ SCRATCH SPACE
+----- BUILD DOCUMENTATION-- run this code to build documentation
 --------------------------------------------------------------------
 restart
 uninstallPackage "JCNetworkParameterization"

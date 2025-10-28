@@ -34,7 +34,7 @@ getModel = method()
 getModel (List,HashTable) := (necleotideSequence,transformTable) -> (
     new Model from {
         "nucleotide sequence" => necleotideSequence,
-        "transform table" => transformTable
+        "transform table" => transformTable -- transform table transforms nucleotide to fourier coordinates
     }
 )
 

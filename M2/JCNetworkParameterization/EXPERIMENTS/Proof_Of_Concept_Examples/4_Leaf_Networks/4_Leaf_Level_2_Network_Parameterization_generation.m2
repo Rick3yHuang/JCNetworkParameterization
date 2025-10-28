@@ -9,9 +9,10 @@ reticulationPairList4LL2 = {{{6,7},{5,6}},{{5,10},{6,10}}};
 N4LL2 = getNetwork(EPList4LL2,leaves4LL2,reticulationPairList4LL2)
 end
 
-restart
+restart -- start from here
 needsPackage "JCNetworkParameterization"
-needs "JCNetworkParameterization/EXPERIMENTS/Proof_Of_Concept_Examples/4_Leaf_Networks/4_Leaf_Level_2_Network_Parameterization_Generation.m2"
+
+needs "JCNetworkParameterization/EXPERIMENTS/Proof_Of_Concept_Examples/4_Leaf_Networks/4_Leaf_Level_2_Network_Parameterization_generation.m2"
 -- Sanity checks
 peek N4LL2
 peek M4L

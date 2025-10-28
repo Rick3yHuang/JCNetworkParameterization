@@ -1,6 +1,11 @@
+
 # Phylogenetics-Identifiability
 
 ```JCNetworkParameterization``` is a ```Macaulay2``` package that can find the parameterization of a given network
+
+## Documentation
+
+To build documentation, go to `M2/JCNetworkParameterization.m2`, open Macaulay2, and then run the code in the section "BUILD DOCUMENTATION" at the end of the file. (This will open a browser with documentation).
 
 ## Data Types
 
@@ -33,3 +38,22 @@ One usage of ```addNetworkEdges``` is ```addNetworkEdges(N,edgesToDivide,vertexI
 - ```listOfVerticesInNewReticulation``` is a list of vertex indices indicating the edge in the new reticulation pairs, e.g. {7,3}
 
 This usage of this methods is able to add multiple reticulations one by one with one call of the function
+
+
+## Other
+
+`OSCAR-NetworkParametrization/` -- this code not working yet
+
+
+## Todo
+
+- [ ] Change "Model" datatype to name "FourierIndices", and change the "NucleotideSequence" datatype to "FourierEquivalenceClasses" (or something to this effect). Also need to change the functions `getNucleotideSequence`, `getModel`, etc.
+- [ ] Update the function `computeDimensionNumerically` in `Parameterization-Generation.m2` (add to examples, add documentation)
+- [ ] change "nucleotideSeq" to "equivclass" or something in `iMap`
+- [ ] we need to figure out why we have different dimensions in the half-ziggurat case `/M2/JCNetworkParameterization/EXPERIMENTS/Paper_Examples/`
+- [ ] we need to rerun our computations with the new code
+- [ ] add examples to documentation
+- [ ] read through algorithm section in paper
+- [ ] add pictures to documentation
+- [ ] not urgent: writing tests
+- [ ] add roadmap to readme

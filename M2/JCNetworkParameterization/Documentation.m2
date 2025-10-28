@@ -291,8 +291,9 @@ doc ///
     edgesToDivide: List
        a list of two edges to divide when adding a new edge
     vertexInNewReticulation: ZZ
-       an integer representing the vertex in the new reticulation edge
-        edgesToDivideList: List
+       an integer representing the vertex in the new reticulation edge. This is the source vertex for one of
+       the reticulation edges
+    edgesToDivideList: List
        a list of lists of two edges to divide when adding new edges
     vertexInNewReticulationList: List
        a list of integers representing the vertices in the new reticulation edges
