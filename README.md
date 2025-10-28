@@ -12,7 +12,7 @@ A ```Model``` ```M``` contains information of the nuclotide sequence and transfo
 
 Function ```computeParameterization``` of this package can be used to compute the parameterization of given network under a given model
 
-The usage of ```computeParameterization``` is ```computeParameterization(M,N,includeQs)```, and the output is a list of polynomials as the parameterizations of the Network ```N``` under the model ```M```
+The usage of ```computeParameterization``` is ```computeParameterization(M,N,includeQs)```, and the output is a list of polynomials as the parameterizations of the network ```N``` under the model ```M```
 
 ```includeQs``` is an optional input as a ```Boolean```
 - If ```includeQs => true``` then the Fourier coodinates are included in the parameterization
