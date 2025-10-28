@@ -31,3 +31,5 @@ One usage of ```addNetworkEdges``` is ```addNetworkEdges(N,edgesToDivide,vertexI
 
 - ```listOfEdgesToDivide``` is a list of edges to divide in order, e.g. {{{1,8},{7,2}},{{3,6},{4,5}}}
 - ```listOfVerticesInNewReticulation``` is a list of vertex indices indicating the edge in the new reticulation pairs, e.g. {7,3}
+
+This usage of this methods is able to add multiple reticulations one by one with one call of the function
