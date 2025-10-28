@@ -100,7 +100,20 @@ doc ///
        a list of polynomials from the parameterization
   Description
    Text
-     
+     Let N be a network and M be a model. This function computes the parameterization of the network N
+     under the model M. The output is a list of polynomials representing the parameterization.
+   Example
+     y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+     L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+     M3L = getModel(L3L,y3L)
+     leaves3LL2 = {1,2,3};
+     EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+     reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+     N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+     netList computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
+     netList computeParameterization(N3LL2,M3L)
+
+  SeeAlso
 ///
 
 doc /// 
