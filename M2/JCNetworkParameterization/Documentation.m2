@@ -42,8 +42,6 @@ doc ///
     getReticulationEdges
     getEdges
     addNetworkEdge
-    generateSigma
-    generateQ
     Network
     Model
 ///
@@ -100,8 +98,8 @@ doc ///
        a list of polynomials from the parameterization
   Description
    Text
-     Let N be a network and M be a model. This function computes the parameterization of the network N
-     under the model M. The output is a list of polynomials representing the parameterization.
+     Let N3LL2 be a 3-leaf level-2 network and M3L be a Jukes-Canter phylogenetic model. This function computes the
+     parameterization of N3LL2 under the model M3L. The output is a list of polynomials representing the parameterization.
    Example
      y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
      L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
@@ -112,8 +110,9 @@ doc ///
      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
      netList computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
      netList computeParameterization(N3LL2,M3L)
-
   SeeAlso
+    (getModel,List,HashTable)
+    (getNetwork,List,List,List)
 ///
 
 doc /// 
@@ -121,7 +120,7 @@ doc ///
     getModel
     (getModel,List,HashTable)
   Headline
-    An accessor method for the Model data type
+    A constructor method for the Model data type
   Usage
     getModel(necleotideSequence,transformTable)
   Inputs
@@ -130,11 +129,15 @@ doc ///
     transformTable: HashTable
        a hash table indicating the representatives and converters for the model
   Outputs
-    Model: Model
+    M: Model
        a Model data type including the nucleotide sequence and transform table
   Description
     Text
-    
+      The following example constructs a Model data type for the Jukes-Cantor model.
+    Example
+      y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+      M3L = getModel(L3L,y3L)
 ///
 
 
@@ -150,12 +153,18 @@ doc ///
     M: Model
        a Model data type including the nucleotide sequence and transform table
   Outputs
-    nucleotideSequence: List
-       a list of nucleotides used in the model
+    nucleotideSequence: VerticalList
+       a VerticalList  of nucleotides used in the model
   Description
     Text
-
+       This method retrieves the nucleotide sequence from a given Model data type and return as a VerticalList.
+    Example
+       y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+       M3L = getModel(L3L,y3L);
+       getNucleotideSequence M3L
   SeeAlso
+    (getModel,List,HashTable)
 ///
 
 doc ///
@@ -174,8 +183,14 @@ doc ///
        a hash table indicating the representatives and converters for the model
   Description
     Text
-
+       This method retrieves the hash table from a given Model data type.
+    Example
+       y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+       M3L = getModel(L3L,y3L);
+       getTransformTable M3L
   SeeAlso
+    (getModel,List,HashTable)
 ///
 
 doc /// 
@@ -183,7 +198,7 @@ doc ///
     getNetwork
     (getNetwork,List,List,List)
   Headline
-    An accessor method for the Network data type
+    A constructor method for the Network data type
   Usage
     getNetwork(EPListSorted,leaves,reticulationEdges)
   Inputs
@@ -198,8 +213,12 @@ doc ///
        a Network data type including the sorted edges, leaves, reticulation edges, and level of the network
   Description
     Text
-
-  SeeAlso
+      The following example constructs a Network data type for a 3-leaf level-2 network.
+    Example
+      leaves3LL2 = {1,2,3};
+      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
 ///
 
 doc /// 
@@ -218,8 +237,15 @@ doc ///
        a list of reticulation edges in the network, where each reticulation edge is represented as a list of two vertices
   Description
     Text
-
+      This method retrieves the reticulation edges as a vertical list from a given Network data type.
+    Example
+      leaves3LL2 = {1,2,3};
+      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2);
+      getReticulationEdges N3LL2
   SeeAlso
+    (getNetwork,List,List,List)
 ///
 
 doc /// 
@@ -238,8 +264,15 @@ doc ///
        a list of edges in the network, where each edge is represented as a list of two
   Description
     Text
-
+      This method retrieves the edges as a vertical list from a given Network data type.
+    Example
+      leaves3LL2 = {1,2,3};
+      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2);
+      getEdges N3LL2
   SeeAlso
+    (getNetwork,List,List,List)
 ///
 
 doc /// 
@@ -248,7 +281,7 @@ doc ///
     (addNetworkEdge,Network,List,ZZ)
     (addNetworkEdge,Network,List,List)
   Headline
-    Add an edge to a given network
+    Add an edge by dividing two existing edges and add a new pair of reticulation edges to a Network data type.
   Usage
     addNetworkEdge(N,edgesToDivide,vertexInNewReticulation)
     addNetworkEdge(N,edgesToDivideList,vertexInNewReticulationList)
@@ -268,58 +301,27 @@ doc ///
        a Network data type including the updated sorted edges, leaves, reticulation edges, and level of the network
   Description
     Text
-
-  SeeAlso
-///
-
-doc /// 
-  Key
-    generateSigma
-    (generateSigma,Network,Ring)
-  Headline
-    Generate the Sigma matrix for a given model
-  Usage
-    generateSigma(Network,Ring)
-  Inputs
-    N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level
-    R: Ring
-       a ring over which the Sigma matrix will be generated
-  Outputs
-    Sigma: Matrix
-       a matrix representing the Sigma matrix for the given model
-  Description
+      The following example adds a new reticulation edge to a given Network data type by dividing two existing edges.
+    Example
+      edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
+      reticulations = {{{6,7},{7,8}}};
+      leaves = {1,2,3,4};
+      exampleNetwork = getNetwork(edges,leaves,reticulations);
+      exampleNetwork2 = addNetworkEdge(exampleNetwork,{{1,8},{7,2}},7);
+      peek exampleNetwork => peek oo
     Text
-
+      The following example adds two new reticulation edges to a given Network data type by dividing four existing edges.
+    Example
+      edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
+      reticulations = {{{6,7},{7,8}}};
+      leaves = {1,2,3,4};
+      exampleNetwork = getNetwork(edges,leaves,reticulations);
+      exampleNetwork2 = addNetworkEdge(exampleNetwork,{{{1,8},{7,2}},{{3,6},{4,5}}},{7,3});
+      peek exampleNetwork => peek oo
   SeeAlso
+    Network
+    (getNetwork,List,List,List)
 ///
-
-doc /// 
-  Key
-    generateQ
-    (generateQ,Matrix,Network,Sequence,Ring)
-  Headline
-    Generate the a polynomial q in the ring R for a given model and network
-  Usage
-    generateQ(matrix,Network,Sequence,Ring)
-  Inputs
-    M: Matrix
-       a matrix representing the Sigma matrix for the given model
-    N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level
-    seq: Sequence
-       a sequence representing the nucleotides in the model
-    R: Ring
-       a ring over which the Q matrix will be generated
-  Outputs
-    qPoly: RingElement
-       a polynomial in the ring R representing the q polynomial for the given model and network
-  Description
-    Text
-
-  SeeAlso
-///
-
 --------------------------------------------------
 --------------------Symbols-----------------------
 --------------------------------------------------
@@ -330,6 +332,6 @@ doc ///
     An optional input for computeParameterization
   Description
     Text
-
+      A boolean value indicating whether the Fourier coordinates should be included in the parameterization.
   SeeAlso
 ///

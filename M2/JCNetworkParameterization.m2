@@ -29,8 +29,6 @@ export {
     "getTransformTable",
     -- Methods
     "computeParameterization",
-    "generateSigma",
-    "generateQ",
     "addNetworkEdge",
     -- Optional Inputs
     "includeQs"
@@ -48,7 +46,7 @@ load(baseDirectory | "JCNetworkParameterization/Parameterization-Generation.m2")
 ----- TESTS
 --------------------------------------------------------------------
 --load(baseDirectory | "JCNetworkParameterization/TESTS/Test-Parameter-Generation.m2")
---------------------------------------------------------------------
+-------------------------------------------------------------\-------
 ----- DOCUMENTATION
 --------------------------------------------------------------------
 beginDocumentation()
