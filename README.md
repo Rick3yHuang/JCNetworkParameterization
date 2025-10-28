@@ -1,6 +1,6 @@
 # Phylogenetics-Identifiability
 
-```JCNetworkParameterization``` is a M2 package that can find the parameterization of a given network
+```JCNetworkParameterization``` is a ```Macaulay2``` package that can find the parameterization of a given network
 
 ## Data Types
 
