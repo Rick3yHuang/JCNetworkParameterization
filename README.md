@@ -12,7 +12,7 @@ To build documentation, go to `M2/JCNetworkParameterization.m2`, open Macaulay2,
 A ```Network``` ```N``` contains informations of edges, leaves, reticulation edges, and level of the network
 
 A ```Model``` ```M``` contains information of the nuclotide sequence and transformation table for the Fourier coordinates
-
+k
 ## Key Method Functions
 
 Function ```computeParameterization``` of this package can be used to compute the parameterization of given network under a given model
@@ -57,3 +57,4 @@ This usage of this methods is able to add multiple reticulations one by one with
 - [ ] add pictures to documentation
 - [ ] not urgent: writing tests
 - [ ] add roadmap to readme. 
+- [ ] fix the function addEdge so that it splits edges properly when reticulations are added
