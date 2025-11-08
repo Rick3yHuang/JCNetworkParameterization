@@ -1,6 +1,6 @@
 -*- coding: utf-8 -*-
 newPackage("JCNetworkParameterization",
-    AuxiliaryFiles => true,
+    AuxiliaryFiles => true, --swap to true before building. jkl 2025-11-07
     Version => "0.1",
     Authors => {
 		{Name => "Hawai`i Phylogentics Identifibillity group"
@@ -39,9 +39,9 @@ baseDirectory = JCNetworkParameterization#"source directory"
 ----- CODE
 --------------------------------------------------------------------
 -- Data
-load(baseDirectory | "JCNetworkParameterization/Network-Data-Type.m2")
+load(baseDirectory | "Network-Data-Type.m2")
 -- Methods
-load(baseDirectory | "JCNetworkParameterization/Parameterization-Generation.m2")
+load(baseDirectory | "Parameterization-Generation.m2")
 --------------------------------------------------------------------
 ----- TESTS
 --------------------------------------------------------------------
@@ -50,7 +50,7 @@ load(baseDirectory | "JCNetworkParameterization/Parameterization-Generation.m2")
 ----- DOCUMENTATION
 --------------------------------------------------------------------
 beginDocumentation()
-load(baseDirectory | "JCNetworkParameterization/Documentation.m2")
+load(baseDirectory | "../docs/Documentation.m2")
 end
 
 --------------------------------------------------------------------

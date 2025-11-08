@@ -56,4 +56,4 @@ This usage of this methods is able to add multiple reticulations one by one with
 - [ ] read through algorithm section in paper
 - [ ] add pictures to documentation
 - [ ] not urgent: writing tests
-- [ ] add roadmap to readme
+- [ ] add roadmap to readme. 

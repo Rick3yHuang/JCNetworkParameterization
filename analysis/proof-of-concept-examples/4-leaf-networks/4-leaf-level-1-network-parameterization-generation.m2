@@ -17,3 +17,4 @@ peek N4LL1
 peek M4L
 netList computeParameterization(N4LL1,M4L,includeQs => false) -- parametrization without the Fourier coordinates
 netList computeParameterization(N4LL1,M4L) -- parametrization with the Fourier coordinates
+

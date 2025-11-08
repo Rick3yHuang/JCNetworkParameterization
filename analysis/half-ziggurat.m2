@@ -1,16 +1,18 @@
 -- Inputs:
 ---------------------Run this for a test for a Half-Ziggurat network-----------------
 -- JC Model for four leaves
-needs "JCNetworkParameterization/EXPERIMENTS/Proof_Of_Concept_Examples/4_Leaf_Networks/4_Leaf_Model_Init.m2"
+needs "../analysis/proof-of-concept-examples/4-leaf-networks/4-leaf-model-init.m2"
 -- An example of a four-leaf network
 leavesHalfZiggurat = {1,2,3,4}
 EPListToStart = {{1,5},{2,6},{3,7},{4,8},{5,6},{5,8},{6,7},{7,8}};
 reticulationPairListToStart = {{{5,6},{6,7}}};
-NToStart = getNetwork(EPListToStart,leavesHalfZiggurat,reticulationPairListToStart) -- build base network
-finalNumOfReticulationPairs = 7; -- we'll build networks up to 7 reticuations
+baseNetwork = getNetwork(EPListToStart,leavesHalfZiggurat,reticulationPairListToStart) -- build base network
+peek baseNetwork
+
+finalNumOfReticulationPairs = 1; -- we'll build networks up to 7 reticuations
 EPListToDivide = {{{3,7},{8,4}},{{1,5},{10,4}},{{3,9},{12,4}},{{1,11},{14,4}},{{3,13},{16,4}},{{1,15},{18,4}}}; -- see figure
 verticesInNewReticulations = {8,10,12,14,16,18}; -- sources of new reticulation edges
-currentNetwork = NToStart;
+currentNetwork = baseNetwork;
 i = 0
 networkOfInterestIndex = 0 -- indicates which network to save, e.g., if =3, then save the network with 5 reticulations
 << "-*" << endl;
@@ -31,7 +33,7 @@ end -- the output is networkOfInterest, a ziggurat with networkOfInterestIndex+2
 restart -- start here
 needsPackage "JCNetworkParameterization"
 needsPackage "MultigradedImplicitization"
-needs "JCNetworkParameterization/EXPERIMENTS/Paper_Examples/Half_Ziggurat.m2"
+needs "../analysis/half-ziggurat.m2"
 -- Find parameterization
 peek networkOfInterest
 peek M4L

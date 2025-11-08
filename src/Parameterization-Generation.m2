@@ -1,8 +1,8 @@
 -*
-Compute the parameterization of a network under thea given model
+Compute the parameterization of a network under a given model
 Input: 
 N	  -- a network of Network type
-M	  -- a modle M of Model type
+M	  -- a model M of Model type
 Optional Input:
 includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
 Output: 
@@ -177,6 +177,10 @@ findVariable(List,String) := (varList,varString) -> (
 -- This can be run in two modes, either (1) by adding one reticulation at a
 -- time, or (2) by adding multiple reticulations at once.
 
+-- jkl 2025-11-07 this function not working correctly. It fails to split
+-- source and target edges when reticulations are added, this results in the
+-- edge list containing too many edges: both new edges and old edges that
+-- should've been removed
 addNetworkEdge = method()
 addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
     edges := getEdges N; reticulationEdges := getReticulationEdges N;
@@ -233,11 +237,11 @@ computeDimensionNumerically (List) := (parameterization) -> (
     -- function requires L to be defined, but should work for any number of
     -- leaves (not just 4) provided that L is defined for that. Last updated
     -- 2024-10-22 by mh
-    edgeVariables = flatten entries vars (ring parameterization_0); -- recover the edge parameters used in the parameterization
-    randomValues = apply(edgeVariables, i-> i=> random QQ);
-    J1 = jacobian matrix{parameterization}; -- compute the symbolic jacobian
-    J0 = sub(J1, randomValues); -- substitute in the random variables
-    out = rank J0;
+    edgeVariables := local flatten entries vars (ring parameterization_0); -- recover the edge parameters used in the parameterization
+    randomValues := local apply(edgeVariables, i-> i=> random QQ);
+    J1 := local jacobian matrix{parameterization}; -- compute the symbolic jacobian
+    J0 := local sub(J1, randomValues); -- substitute in the random variables
+    out := local rank J0;
     return out;
     )
 
