@@ -46,7 +46,7 @@ load(baseDirectory | "Parameterization-Generation.m2")
 ----- TESTS
 --------------------------------------------------------------------
 --load(baseDirectory | "JCNetworkParameterization/TESTS/Test-Parameter-Generation.m2")
--------------------------------------------------------------\-------
+--------------------------------------------------------------------
 ----- DOCUMENTATION
 --------------------------------------------------------------------
 beginDocumentation()

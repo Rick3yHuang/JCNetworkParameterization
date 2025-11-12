@@ -180,12 +180,13 @@ findVariable(List,String) := (varList,varString) -> (
 -- jkl 2025-11-07 this function not working correctly. It fails to split
 -- source and target edges when reticulations are added, this results in the
 -- edge list containing too many edges: both new edges and old edges that
--- should've been removed
+-- should've been removed (bug fixed --Rickey 2025-11-11)
 addNetworkEdge = method()
 addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
     edges := getEdges N; reticulationEdges := getReticulationEdges N;
     leaves := getLeaves N; level := getLevel N;
     numVertices := max flatten edges;
+    -- make sure that the edges to divide are not reticulation edges
     scan(edgesToDivide,e -> assert(#select(reticulationEdges,r -> r_0 == e or r_1 == e) == 0));
     (edgeToDivide1,edgeToDivide2) := toSequence edgesToDivide;
     edgesToAdd := {{edgeToDivide1_0,numVertices+1},{edgeToDivide1_1,numVertices+1},
@@ -196,7 +197,8 @@ addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) ->
 	) else (
 	newReticulationEdges = {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+2}}};
 	);
-    getNetwork(edges|edgesToAdd,leaves,reticulationEdges|newReticulationEdges)
+    newEdges := delete(edgeToDivide1,delete(edgeToDivide2,edges)) | edgesToAdd;
+    getNetwork(newEdges,leaves,reticulationEdges|newReticulationEdges)
     )
 -* Here's an example of how to use addEdge:
 edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
