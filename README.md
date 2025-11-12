@@ -54,7 +54,7 @@ This usage of this methods is able to add multiple reticulations one by one with
 - [ ] we need to rerun our computations with the new code
 - [ ] add examples to documentation
 - [ ] read through algorithm section in paper
-- [ ] add pictures to documentation
+- [x] add pictures to documentation (couldn't find a way to embed this, but may be possible to add a link to the image)
 - [ ] not urgent: writing tests
 - [ ] add roadmap to readme. 
 - [x] fix the function addEdge so that it splits edges properly when reticulations are added
