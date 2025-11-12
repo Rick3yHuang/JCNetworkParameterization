@@ -180,7 +180,7 @@ findVariable(List,String) := (varList,varString) -> (
 -- jkl 2025-11-07 this function not working correctly. It fails to split
 -- source and target edges when reticulations are added, this results in the
 -- edge list containing too many edges: both new edges and old edges that
--- should've been removed (bug fixed --Rickey 2025-11-11)
+-- should've been removed (bug fixed -- Rickey 2025-11-11)
 addNetworkEdge = method()
 addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
     edges := getEdges N; reticulationEdges := getReticulationEdges N;
@@ -232,19 +232,19 @@ peek oo
 
 -- This function computes the dimension of a parameterization numerically
 computeDimensionNumerically = method()
-computeDimensionNumerically (List) := (parameterization) -> (
+computeDimensionNumerically List := parameterization -> (
     -- Compute the dimension of the parameterization numerically. Input takes
     -- the form of a parameterization without q's, i.e., of the form of the
     -- output of fourLeafParameterization with includeQs=false. Note: this
     -- function requires L to be defined, but should work for any number of
     -- leaves (not just 4) provided that L is defined for that. Last updated
     -- 2024-10-22 by mh
-    edgeVariables := local flatten entries vars (ring parameterization_0); -- recover the edge parameters used in the parameterization
-    randomValues := local apply(edgeVariables, i-> i=> random QQ);
-    J1 := local jacobian matrix{parameterization}; -- compute the symbolic jacobian
-    J0 := local sub(J1, randomValues); -- substitute in the random variables
-    out := local rank J0;
-    return out;
+    edgeVariable := flatten entries vars (ring parameterization_0);
+    randomValues := flatten entries random(QQ^(#edgeVariable),QQ^1);
+    randomValuesSubOptions := apply(#edgeVariable, j -> edgeVariable#j => randomValues#j);
+    jac := jacobian matrix{parameterization}; -- compute the symbolic jacobian
+    evaluatedJac := sub(jac, randomValuesSubOptions); -- substitute in the random variables
+    rank evaluatedJac    
     )
 
 end

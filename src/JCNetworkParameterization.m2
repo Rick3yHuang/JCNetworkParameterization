@@ -30,6 +30,7 @@ export {
     -- Methods
     "computeParameterization",
     "addNetworkEdge",
+    "computeDimensionNumerically",
     -- Optional Inputs
     "includeQs"
     }
