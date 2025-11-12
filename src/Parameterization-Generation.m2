@@ -230,15 +230,18 @@ peek oo
 -- Compute variety dimension numerically---------------------
 -------------------------------------------------------------
 
--- This function computes the dimension of a parameterization numerically
+-*
+This function computes the dimension of a parameterization numerically
+Input: 
+parameterization	  -- a list of polynomials representing the parameterization
+                             (the form of a parameterization without q's, i.e., of
+      		             the form of the output of fourLeafParameterization with
+			     includeQs=false)
+Output: 
+the dimension of the parameterized variety
+*-
 computeDimensionNumerically = method()
 computeDimensionNumerically List := parameterization -> (
-    -- Compute the dimension of the parameterization numerically. Input takes
-    -- the form of a parameterization without q's, i.e., of the form of the
-    -- output of fourLeafParameterization with includeQs=false. Note: this
-    -- function requires L to be defined, but should work for any number of
-    -- leaves (not just 4) provided that L is defined for that. Last updated
-    -- 2024-10-22 by mh
     edgeVariable := flatten entries vars (ring parameterization_0);
     randomValues := flatten entries random(QQ^(#edgeVariable),QQ^1);
     randomValuesSubOptions := apply(#edgeVariable, j -> edgeVariable#j => randomValues#j);

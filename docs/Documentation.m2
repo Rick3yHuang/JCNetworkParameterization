@@ -34,16 +34,17 @@ doc ///
     {\em JCNetworkParameterization} is a package that can find the parameterization of a given network
 --  Caveat
   Subnodes
+    addNetworkEdge
     computeParameterization
+    computeDimensionNumerically
+    Network
+    Model
     getModel
     getNucleotideSequence
     getTransformTable
     getNetwork
     getReticulationEdges
     getEdges
-    addNetworkEdge
-    Network
-    Model
 ///
 
 --------------------------------------------------
@@ -323,6 +324,40 @@ doc ///
     Network
     (getNetwork,List,List,List)
 ///
+
+doc /// 
+  Key
+    computeDimensionNumerically
+    (computeDimensionNumerically,List)
+  Headline
+    Compute the dimension of a given parameterization numerically
+  Usage
+    computeDimensionNumerically(parameterization)
+  Inputs
+    parameterization: List
+       a list of polynomials from the parameterization without the Fourier coordinates
+  Outputs
+    dimension: ZZ
+       an integer representing the dimension of the given parameterization
+  Description
+    Text
+      Given a three-leaf level-2 network N3LL2 and a Jukes-Cantor model M3L, the following example
+      computes the parameterization of N3LL2 under M3L without the Fourier coordinates and then
+      computes the dimension of the parameterization numerically.
+    Example
+      y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+      M3L = getModel(L3L,y3L)
+      leaves3LL2 = {1,2,3};
+      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+      paramerterization = computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
+      computeDimensionNumerically paramerterization
+  SeeAlso
+    (computeParameterization,Network,Model)
+///
+
 --------------------------------------------------
 --------------------Symbols-----------------------
 --------------------------------------------------
