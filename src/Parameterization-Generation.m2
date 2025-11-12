@@ -197,7 +197,9 @@ addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) ->
 	) else (
 	newReticulationEdges = {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+2}}};
 	);
-    newEdges := delete(edgeToDivide1,delete(edgeToDivide2,edges)) | edgesToAdd;
+    newEdges := delete(sort edgeToDivide2,edges);
+    newEdges = delete(sort edgeToDivide1,newEdges);
+    newEdges = newEdges | edgesToAdd;
     getNetwork(newEdges,leaves,reticulationEdges|newReticulationEdges)
     )
 -* Here's an example of how to use addEdge:
