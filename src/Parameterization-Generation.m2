@@ -30,7 +30,6 @@ computeParameterization (Network, Model) := o-> (N,M) -> (
     varSqList := apply((gens S)_{0..3*(#edges)-1}, j -> j^2);
     R := S/(ideal varSqList);
     sigma := generateSigma(N,R); -- sigma is the state vector for each edge before deleting edges and evaluate
-    
     -- List out the fourier coordinates (the q-variables)
     fourierCoordinates := toList apply(L,j-> q_(toSequence apply(#j, k -> y#(j#k)))); 
     ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
@@ -40,7 +39,7 @@ computeParameterization (Network, Model) := o-> (N,M) -> (
 	AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
 	out = apply(parameterization, f -> sub(f,AB));
 	);
-    out
+    outb
     )
 
 -*
@@ -67,14 +66,14 @@ generateSigma (Network,Ring) := (N,R) -> (
     *-
     scan(#leafEdgeList,j -> (
 	    pair := leafEdgeList_j;
-	    matA_(pair_1-1,pair_0-1)=Rvars_(1+j*3);)
-	);
+	    matA_(pair_1-1,pair_0-1) = findVariable(Rvars,concatenate("e_",toString pair));
+	));
     scan(#edgeList,k -> (
 	    pair := edgeList_k;
 	    x := pair_0-1;
 	    y := pair_1-1;
-	    matA_(y,x) = Rvars_(#leafEdgeList+1+k*3);
-	    matA_(x,y) = Rvars_(#leafEdgeList+1+k*3);
+	    matA_(y,x) = findVariable(Rvars,concatenate("e_",toString pair));
+	    matA_(x,y) = findVariable(Rvars,concatenate("e_",toString pair));
 	    ));
     -- v is the initial state with first nleaves entries (i_leafIndex) and 0 otherwise 
     v := transpose matrix{Rvars_{-nLeaves..-1}|apply(numV-nLeaves,j -> 0)};

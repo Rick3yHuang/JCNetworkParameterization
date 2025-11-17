@@ -9,12 +9,13 @@ reticulationPairListToStart = {{{5,6},{6,7}}};
 baseNetwork = getNetwork(EPListToStart,leavesHalfZiggurat,reticulationPairListToStart) -- build base network
 peek baseNetwork
 
-finalNumOfReticulationPairs = 3; -- we'll build networks up to 7 reticuations
+finalNumOfReticulationPairs = 7; -- we'll build networks up to 7 reticuations
 EPListToDivide = {{{3,7},{8,4}},{{1,5},{10,4}},{{3,9},{12,4}},{{1,11},{14,4}},{{3,13},{16,4}},{{1,15},{18,4}}}; -- see figure
 verticesInNewReticulations = {8,10,12,14,16,18}; -- sources of new reticulation edges
 currentNetwork = baseNetwork;
 i = 0
-networkOfInterestReticulationNum = 2 -- indicates which network to save (should be a number >= 2)
+networkOfInterest := baseNetwork;
+networkOfInterestReticulationNum = 2 -- indicates which network to save (should be a number >= 1)
 << "-*" << endl;
 << "Reticuation Pairs: " << getReticulationEdges currentNetwork << endl;
 << "Number of Reticulation Pairs: " << #(getReticulationEdges currentNetwork) << ", dimension of the network: " << computeDimensionNumerically computeParameterization(currentNetwork,M4L,includeQs => false) << endl;
@@ -25,7 +26,7 @@ while i < finalNumOfReticulationPairs-1 do (
     << "Reticuation Pairs: " << getReticulationEdges currentNetwork << endl;
     << "Number of Reticulation Pairs: " << #(getReticulationEdges currentNetwork) << ", dimension of the network: " << computeDimensionNumerically computeParameterization(currentNetwork,M4L,includeQs => false) << endl;
     << "*-" << endl;
-    if i == networkOfInterestReticulationNum-2 then networkOfInterest = currentNetwork;
+    if i == networkOfInterestReticulationNum-2 then networkOfInterest = currentNetwork;    
     i += 1;
     )
 end -- the output is networkOfInterest, a ziggurat with networkOfInterestIndex+2 reticulation
