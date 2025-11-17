@@ -39,7 +39,7 @@ computeParameterization (Network, Model) := o-> (N,M) -> (
 	AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
 	out = apply(parameterization, f -> sub(f,AB));
 	);
-    outb
+    out
     )
 
 -*
