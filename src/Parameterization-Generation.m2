@@ -106,7 +106,7 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
     out := 0;
     edgeVariables := apply(#EPListSorted, j -> findVariable(Rvars,concatenate("e_",toString EPListSorted#j)));
     for pair in discardedReticulation do (
-	currentRemainingEdges := edgeVariables;x
+	currentRemainingEdges := edgeVariables;
 	remainingEdges := currentRemainingEdges;
 	for p in pair do remainingEdges = delete(p,currentRemainingEdges);
 	prod := 1;
