@@ -15,7 +15,7 @@ verticesInNewReticulations = {8,10,12,14,16,18}; -- sources of new reticulation 
 currentNetwork = baseNetwork;
 i = 0
 networkOfInterest = baseNetwork;
-networkOfInterestReticulationNum = 2 -- indicates which network to save (should be a number >= 1)
+networkOfInterestReticulationNum = 1 -- indicates which network to save (should be a number >= 1)
 << "-*" << endl;
 << "Reticuation Pairs: " << getReticulationEdges currentNetwork << endl;
 << "Number of Reticulation Pairs: " << #(getReticulationEdges currentNetwork) << ", dimension of the network: " << computeDimensionNumerically computeParameterization(currentNetwork,M4L,includeQs => false) << endl;
@@ -32,6 +32,7 @@ while i < finalNumOfReticulationPairs-1 do (
 end -- the output is networkOfInterest, a ziggurat with networkOfInterestIndex+2 reticulation
 
 restart -- start here
+changeDirectory("../src/")
 needsPackage "JCNetworkParameterization"
 needsPackage "MultigradedImplicitization"
 needs "../analysis/half-ziggurat.m2"
@@ -51,4 +52,3 @@ I = ideal flatten values G
 dim I
 isPrime I
 netList flatten entries gens I
-
