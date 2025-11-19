@@ -1,0 +1,13 @@
+-- -*- M2-comint -*- hash: 15778735479947617175
+
+i1 : y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+
+i2 : L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+
+i3 : M3L = getModel(L3L,y3L)
+
+o3 = Model{...2...}
+
+o3 : Model
+
+i4 : 
