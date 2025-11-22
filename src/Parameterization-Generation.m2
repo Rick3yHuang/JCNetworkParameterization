@@ -176,11 +176,6 @@ findVariable(List,String) := (varList,varString) -> (
 
 -- This can be run in two modes, either (1) by adding one reticulation at a
 -- time, or (2) by adding multiple reticulations at once.
-
--- jkl 2025-11-07 this function not working correctly. It fails to split
--- source and target edges when reticulations are added, this results in the
--- edge list containing too many edges: both new edges and old edges that
--- should've been removed (bug fixed -- Rickey 2025-11-11)
 addNetworkEdge = method()
 addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
     edges := getEdges N; reticulationEdges := getReticulationEdges N;
