@@ -108,7 +108,7 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
     for pair in discardedReticulation do (
 	currentRemainingEdges := edgeVariables;
 	remainingEdges := currentRemainingEdges;
-	for p in pair do remainingEdges = delete(p,currentRemainingEdges);
+	for p in pair do remainingEdges = delete(p,remainingEdges);
 	prod := 1;
 	for ed in remainingEdges do (
 	    endPoints := value substring(2,toString ed);
