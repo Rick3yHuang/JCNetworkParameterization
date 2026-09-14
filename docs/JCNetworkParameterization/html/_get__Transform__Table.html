@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>getTransformTable -- An accessor method for the transform table of a Model data type</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <link type="text/css" rel="stylesheet" href="/opt/homebrew/share/Macaulay2/Style/doc.css">
+
+    <link rel="stylesheet" href="/opt/homebrew/share/Macaulay2/Style/katex/katex.min.css">
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/katex.min.js"></script>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/auto-render.min.js"></script>
+    <script>
+      var macros = {
+          "\\break": "\\\\",
+          "\\ZZ": "\\mathbb{Z}",
+          "\\NN": "\\mathbb{N}",
+          "\\QQ": "\\mathbb{Q}",
+          "\\RR": "\\mathbb{R}",
+          "\\CC": "\\mathbb{C}",
+          "\\PP": "\\mathbb{P}"
+      }, delimiters = [
+          { left: "$$",  right: "$$",  display: true},
+          { left: "\\[", right: "\\]", display: true},
+          { left: "$",   right: "$",   display: false},
+          { left: "\\(", right: "\\)", display: false}
+      ], ignoredTags = [
+	  "kbd", "var", "samp", "script", "noscript",
+	  "style", "textarea", "pre", "code", "option" ];
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, { delimiters: delimiters, macros: macros, ignoredTags: ignoredTags, trust: true });
+      });
+    </script>
+    <style>.katex { font-size: 1em; }</style>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/copy-tex.min.js"></script>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/render-a11y-string.min.js"></script>
+    <script src="/opt/homebrew/share/Macaulay2/Style/prism.js"></script>
+    <script>var current_version = '1.25.06';</script>
+    <script src="/opt/homebrew/share/Macaulay2/Style/version-select.js"></script>
+    <link type="image/x-icon" rel="icon" href="/opt/homebrew/share/Macaulay2/Style/icon.gif">
+  </head>
+  <body>
+    <div id="buttons">
+      <div>
+<a href="https://macaulay2.com/">Macaulay2</a> <span id="version-select-container"></span> » <a title="Macaulay2 documentation" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/index.html">Documentation </a> <br><a href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/_packages_spprovided_spwith_sp__Macaulay2.html">Packages</a> » <span><a title="A Macaulay2 package to work with Phylogenetics Identifiability." href="index.html">JCNetworkParameterization</a> » <a title="An accessor method for the transform table of a Model data type" href="_get__Transform__Table.html">getTransformTable</a></span>      </div>
+      <div class="right">
+<form method="get" action="https://www.google.com/search">
+  <input placeholder="Search" type="text" name="q" value="">
+  <input type="hidden" name="q" value="site:macaulay2.com/doc">
+</form>
+<a href="_get__Network.html">next</a> | <a href="_get__Nucleotide__Sequence.html">previous</a> | <a href="_get__Network.html">forward</a> | <a href="_get__Nucleotide__Sequence.html">backward</a> | <a href="index.html">up</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a>      </div>
+    </div>
+    <hr>
+    <div>
+      <h1>getTransformTable -- An accessor method for the transform table of a Model data type</h1>
+      <ul>
+        <li>
+          <dl class="element">
+            <dt>Usage: </dt>
+            <dd><code class="language-macaulay2">getTransformTable(Model)</code></dd>
+          </dl>
+        </li>
+        <li>Inputs:          <ul>
+            <li><span><span class="tt">M</span>, <span>an instance of the type <a title="A general datatype for a model" href="___Model.html">Model</a></span>, a Model data type including the nucleotide sequence and transform table</span></li>
+          </ul>
+        </li>
+        <li>Outputs:          <ul>
+            <li><span><span class="tt">transformTable</span>, <span>a <a title="the class of all hash tables" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___Hash__Table.html">hash table</a></span>, a hash table indicating the representatives and converters for the model</span></li>
+          </ul>
+        </li>
+      </ul>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>This method retrieves the hash table from a given Model data type.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i1 : y3L = hashTable{A => 0, C => 1, G => 2, T => 3};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i2 : L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i3 : M3L = getModel(L3L,y3L);</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i4 : getTransformTable M3L
+
+o4 = HashTable{A => 0}
+               C => 1
+               G => 2
+               T => 3
+
+o4 : HashTable</code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li><span><a title="A constructor method for the Model data type" href="_get__Model.html">getModel(List,HashTable)</a> -- A constructor method for the Model data type</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="waystouse">
+          <h2>Ways to use <span class="tt">getTransformTable</span>:</h2>
+          <ul>
+            <li><kbd>getTransformTable(Model)</kbd></li>
+          </ul>
+        </div>
+        <div class="waystouse">
+          <h2>For the programmer</h2>
+          <p>The object <a title="An accessor method for the transform table of a Model data type" href="_get__Transform__Table.html">getTransformTable</a> is <span>a <a title="a type of method function" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___Method__Function.html">method function</a></span>.</p>
+        </div>
+        <hr>
+        <div class="waystouse">
+          <p>The source of this document is in <span class="tt">/Users/rickeyhuang/Desktop/Repositories/JCNetworkParameterization/docs/Documentation.m2:196:0</span>.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

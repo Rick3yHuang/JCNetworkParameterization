@@ -1,18 +1,22 @@
+-------------------------------
+--functions for generating paramaterization
+--------------------------------------
+
 generateSigma = method()
 generateSigma (List,ZZ) := (EPListSorted,nLeaves) -> (
     numV := #(unique flatten  EPListSorted);
     leafList := EPListSorted_{0..nLeaves-1};
     edgeList := EPListSorted_{nLeaves..#EPListSorted - 1};
-    A := mutableIdentity(R,numV);
-    for i from 0 to numV-1 do A_(i,i) = 0;
-    scan(leafList,pair -> A_(pair_1-1,pair_0-1)=e_pair);
+    As := mutableIdentity(R,numV);
+    for i from 0 to numV-1 do As_(i,i) = 0;
+    scan(leafList,pair -> As_(pair_1-1,pair_0-1)=e_pair);
     scan(edgeList,pair -> (
-	    A_(pair_1-1,pair_0-1) = e_pair;
-	    A_(pair_0-1,pair_1-1) = e_pair;
+	    As_(pair_1-1,pair_0-1) = e_pair;
+	    As_(pair_0-1,pair_1-1) = e_pair;
 	    ));
     v := transpose matrix{toList (i_1..i_nLeaves)|apply(numV-nLeaves,j -> 0)};
     sigma = mutableMatrix v;
-    for j from 1 to #EPListSorted do sigma = sigma + (A^j)*(mutableMatrix v);
+    for j from 1 to #EPListSorted do sigma = sigma + (As^j)*(mutableMatrix v);
     transpose matrix{apply(numRows sigma, j -> sum flatten entries (coefficients sigma_(j,0))_0)}
     )
 
@@ -22,7 +26,7 @@ generateQ (Matrix,List,Sequence,List) := (sigma,reticulationPairList,seq,EPListS
     (F1,F2) := iMap(seq,#EPListSorted);
     k := #reticulationPairs;
     discardedReticulation := apply(2^k,j -> apply(k,l -> reticulationPairs#l#(floor((j%(2^(l+1)))/(2^l)))));
-    out = 0;
+    out := 0;
     edgeVars := apply(#EPListSorted, j -> e_(EPListSorted#j));
     for pair in discardedReticulation do (
 	remainingEdges = edgeVars;
@@ -64,16 +68,24 @@ iMap (Sequence,ZZ) := (seq,n) -> (
     return (F1,F2);
     )
 
-end
+----------------------------------------------------------------
+installPackage "MultigradedImplicitization"
 
-restart
-load "ParametrizationGeneration.m2"
-y = hashTable{A => 0, C => 1, G => 2, T => 3}
--- Inputs:
-nLeaves = 3
-EPList = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-reticulationPairList = {{{4,6},{5,6}},{{6,7},{7,8}}};
-L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)}
+y = hashTable{A => 0, C => 1, G => 2, T => 3};
+printWidth=10000;
+nLeaves=4;
+
+-- here we select the network we want to find invariants for 
+
+NN = {{{1,5}, {2,6}, {3,8}, {4,10}, {5,6}, {5,7}, {6,9}, {7,8}, {7,10}, {8,9}, {9,10}},
+{ {{5,6}, {5,7}},
+    {{8,9}, {9,10}}}}
+EPList = NN_0
+reticulationPairList = NN_1
+
+
+L = {(A,A,A,A),(A,A,C,C),(A,C,C,A),(A,C,A,C),(A,C,G,T),(C,A,C,A),(C,A,A,C),(C,A,G,T),(C,C,A,A),(C,C,C,C),(C,G,T,A),(C,G,C,G),(C,G,A,T),(C,C,G,G),(C,G,G,C)};
+
 
 EPListSorted = sort apply(#EPList, j -> sort EPList#j);
 varList = flatten(apply(#EPListSorted, j -> {e_(EPListSorted#j),a_(EPListSorted#j),b_(EPListSorted#j)}))|toList(i_1..i_nLeaves);
@@ -82,17 +94,14 @@ varSqList = apply((gens S)_{0..3*(#EPListSorted)-1}, j -> j^2)
 R = S/(ideal varSqList)
 sigma = generateSigma(EPListSorted,nLeaves)
 RQ = R[toList apply(L,i->q_(y#(i#0),y#(i#1),y#(i#2)))]
--- Without q's
-param_0 = apply(L,j -> generateQ(sigma,reticulationPairList,j,EPListSorted))
-dim ideal param_0
-qVars = apply(L,j -> q_(y#(j#0),y#(j#1),y#(j#2)))
-A = QQ[qVars]
-B = QQ[flatten(apply(#EPListSorted, j -> {a_(EPListSorted#j),b_(EPListSorted#j)}))]
-phi = map(B,A,apply(param_0,j->sub(j,B)))
 
--*
--- With q's
-Eqn_1 = apply(L,j -> q_(y#(j#0),y#(j#1),y#(j#2)) - generateQ(sigma,reticulationPairList,j,EPListSorted))
-I = ideal Eqn_1
-dim I
-*-
+param_0 = apply(L,j -> generateQ(sigma,reticulationPairList,j,EPListSorted))
+B = QQ[flatten(apply(#EPListSorted, j -> {a_(EPListSorted#j),b_(EPListSorted#j)}))] -- all the parameters
+param_0=apply(param_0, i->sub(i, B))
+
+RQS = QQ[(flatten entries vars RQ)] 
+phi = map(B, RQS, param_0)
+
+G1 = componentsOfKernel(3, phi)
+
+flatten values G1

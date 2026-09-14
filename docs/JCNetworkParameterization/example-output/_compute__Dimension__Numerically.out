@@ -1,0 +1,44 @@
+-- -*- M2-comint -*- hash: 10995086512642809530
+
+i1 : y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+
+i2 : L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+
+i3 : M3L = getModel(L3L,y3L)
+
+o3 = Model{...2...}
+
+o3 : Model
+
+i4 : leaves3LL2 = {1,2,3};
+
+i5 : EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+
+i6 : reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
+
+i7 : N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+
+o7 = Network{...4...}
+
+o7 : Network
+
+i8 : paramerterization = computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
+
+o8 = {a      a      a      a      a      a      a       + a      a      a      a      a      a       + 2a      a      a      a      a      }
+     { {1, 4} {2, 7} {3, 8} {4, 5} {5, 6} {5, 8} {7, 8}    {1, 4} {2, 7} {3, 8} {4, 5} {5, 8} {7, 8}     {1, 4} {2, 7} {3, 8} {4, 5} {5, 8}}
+     {a      b      b      a      a      a      b       + a      b      b      a      a      b       + 2a      b      b      a      a      }
+     { {1, 4} {2, 7} {3, 8} {4, 5} {5, 6} {5, 8} {7, 8}    {1, 4} {2, 7} {3, 8} {4, 5} {5, 8} {7, 8}     {1, 4} {2, 7} {3, 8} {4, 5} {5, 8}}
+     {b      a      b      b      a      b      a       + b      a      b      b      b      a       + 2b      a      b      b      b      }
+     { {1, 4} {2, 7} {3, 8} {4, 5} {5, 6} {5, 8} {7, 8}    {1, 4} {2, 7} {3, 8} {4, 5} {5, 8} {7, 8}     {1, 4} {2, 7} {3, 8} {4, 5} {5, 8}}
+     {b      b      a      b      a      b      b       + b      b      a      b      b      b       + 2b      b      a      b      b      }
+     { {1, 4} {2, 7} {3, 8} {4, 5} {5, 6} {5, 8} {7, 8}    {1, 4} {2, 7} {3, 8} {4, 5} {5, 8} {7, 8}     {1, 4} {2, 7} {3, 8} {4, 5} {5, 8}}
+     {b      b      b      b      a      b      b       + b      b      b      b      b      b       + 2b      b      b      b      b      }
+     { {1, 4} {2, 7} {3, 8} {4, 5} {5, 6} {5, 8} {7, 8}    {1, 4} {2, 7} {3, 8} {4, 5} {5, 8} {7, 8}     {1, 4} {2, 7} {3, 8} {4, 5} {5, 8}}
+
+o8 : VerticalList
+
+i9 : computeDimensionNumerically paramerterization
+
+o9 = 4
+
+i10 : 

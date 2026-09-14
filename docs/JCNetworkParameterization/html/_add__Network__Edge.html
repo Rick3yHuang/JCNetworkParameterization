@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>addNetworkEdge -- Add an edge by dividing two existing edges and add a new pair of reticulation edges to a Network data type.</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <link type="text/css" rel="stylesheet" href="/opt/homebrew/share/Macaulay2/Style/doc.css">
+
+    <link rel="stylesheet" href="/opt/homebrew/share/Macaulay2/Style/katex/katex.min.css">
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/katex.min.js"></script>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/auto-render.min.js"></script>
+    <script>
+      var macros = {
+          "\\break": "\\\\",
+          "\\ZZ": "\\mathbb{Z}",
+          "\\NN": "\\mathbb{N}",
+          "\\QQ": "\\mathbb{Q}",
+          "\\RR": "\\mathbb{R}",
+          "\\CC": "\\mathbb{C}",
+          "\\PP": "\\mathbb{P}"
+      }, delimiters = [
+          { left: "$$",  right: "$$",  display: true},
+          { left: "\\[", right: "\\]", display: true},
+          { left: "$",   right: "$",   display: false},
+          { left: "\\(", right: "\\)", display: false}
+      ], ignoredTags = [
+	  "kbd", "var", "samp", "script", "noscript",
+	  "style", "textarea", "pre", "code", "option" ];
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, { delimiters: delimiters, macros: macros, ignoredTags: ignoredTags, trust: true });
+      });
+    </script>
+    <style>.katex { font-size: 1em; }</style>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/copy-tex.min.js"></script>
+    <script defer="defer" src="/opt/homebrew/share/Macaulay2/Style/katex/contrib/render-a11y-string.min.js"></script>
+    <script src="/opt/homebrew/share/Macaulay2/Style/prism.js"></script>
+    <script>var current_version = '1.25.06';</script>
+    <script src="/opt/homebrew/share/Macaulay2/Style/version-select.js"></script>
+    <link type="image/x-icon" rel="icon" href="/opt/homebrew/share/Macaulay2/Style/icon.gif">
+  </head>
+  <body>
+    <div id="buttons">
+      <div>
+<a href="https://macaulay2.com/">Macaulay2</a> <span id="version-select-container"></span> » <a title="Macaulay2 documentation" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/index.html">Documentation </a> <br><a href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/_packages_spprovided_spwith_sp__Macaulay2.html">Packages</a> » <span><a title="A Macaulay2 package to work with Phylogenetics Identifiability." href="index.html">JCNetworkParameterization</a> » <a title="Add an edge by dividing two existing edges and add a new pair of reticulation edges to a Network data type." href="_add__Network__Edge.html">addNetworkEdge</a></span>      </div>
+      <div class="right">
+<form method="get" action="https://www.google.com/search">
+  <input placeholder="Search" type="text" name="q" value="">
+  <input type="hidden" name="q" value="site:macaulay2.com/doc">
+</form>
+<a href="_compute__Parameterization.html">next</a> | previous | <a href="_compute__Parameterization.html">forward</a> | <a href="index.html">backward</a> | <a href="index.html">up</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a>      </div>
+    </div>
+    <hr>
+    <div>
+      <h1>addNetworkEdge -- Add an edge by dividing two existing edges and add a new pair of reticulation edges to a Network data type.</h1>
+      <ul>
+        <li>
+          <dl class="element">
+            <dt>Usage: </dt>
+            <dd><code class="language-macaulay2">addNetworkEdge(N,edgesToDivide,vertexInNewReticulation)</code></dd>
+            <dd><code class="language-macaulay2">addNetworkEdge(N,edgesToDivideList,vertexInNewReticulationList)</code></dd>
+          </dl>
+        </li>
+        <li>Inputs:          <ul>
+            <li><span><span class="tt">N</span>, <span>an instance of the type <a title="A general datatype for a network" href="___Network.html">Network</a></span>, a Network data type including the sorted edges, leaves, reticulation edges, and level of the network</span></li>
+            <li><span><span class="tt">edgesToDivide</span>, <span>a <a title="the class of all lists -- {...}" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, a list of two edges to divide when adding a new edge</span></li>
+            <li><span><span class="tt">vertexInNewReticulation</span>, <span>an <a title="the class of all integers" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___Z__Z.html">integer</a></span>, an integer representing the vertex in the new reticulation edge. This is the source vertex for one of the reticulation edges</span></li>
+            <li><span><span class="tt">edgesToDivideList</span>, <span>a <a title="the class of all lists -- {...}" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, a list of lists of two edges to divide when adding new edges</span></li>
+            <li><span><span class="tt">vertexInNewReticulationList</span>, <span>a <a title="the class of all lists -- {...}" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, a list of integers representing the vertices in the new reticulation edges</span></li>
+          </ul>
+        </li>
+        <li>Outputs:          <ul>
+            <li><span><span class="tt">NNew</span>, <span>an instance of the type <a title="A general datatype for a network" href="___Network.html">Network</a></span>, a Network data type including the updated sorted edges, leaves, reticulation edges, and level of the network</span></li>
+          </ul>
+        </li>
+      </ul>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>The following example adds a new reticulation edge to a given Network data type by dividing two existing edges.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i1 : edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i2 : reticulations = {{{6,7},{7,8}}};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i3 : leaves = {1,2,3,4};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i4 : exampleNetwork = getNetwork(edges,leaves,reticulations);</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i5 : exampleNetwork2 = addNetworkEdge(exampleNetwork,{{1,8},{7,2}},7);</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i6 : peek exampleNetwork => peek oo
+
+o6 = Network{leaves => {1, 2, 3, 4}                  } => Network{leaves => {1, 2, 3, 4}                    }
+             level => 1                                           level => 2
+             reticulation edges => {{{6, 7}, {7, 8}}}             reticulation edges => {{{6, 7}, {7, 8}}  }
+             sorted edges => {{1, 8}}                                                   {{{9, 10}, {7, 10}}}
+                             {{2, 7}}                             sorted edges => {{1, 9} }
+                             {{3, 6}}                                             {{2, 10}}
+                             {{4, 5}}                                             {{3, 6} }
+                             {{5, 6}}                                             {{4, 5} }
+                             {{5, 8}}                                             {{5, 6} }
+                             {{6, 7}}                                             {{5, 8} }
+                             {{7, 8}}                                             {{6, 7} }
+                                                                                  {{7, 8} }
+                                                                                  {{7, 10}}
+                                                                                  {{8, 9} }
+                                                                                  {{9, 10}}
+
+o6 : Option</code></pre>
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>The following example adds two new reticulation edges to a given Network data type by dividing four existing edges.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i7 : edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i8 : reticulations = {{{6,7},{7,8}}};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i9 : leaves = {1,2,3,4};</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i10 : exampleNetwork = getNetwork(edges,leaves,reticulations);</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i11 : exampleNetwork2 = addNetworkEdge(exampleNetwork,{{{1,8},{7,2}},{{3,6},{4,5}}},{7,3});</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-macaulay2">i12 : peek exampleNetwork => peek oo
+
+o12 = Network{leaves => {1, 2, 3, 4}                  } => Network{leaves => {1, 2, 3, 4}                     }
+              level => 1                                           level => 3
+              reticulation edges => {{{6, 7}, {7, 8}}}             reticulation edges => {{{6, 7}, {7, 8}}   }
+              sorted edges => {{1, 8}}                                                   {{{9, 10}, {7, 10}} }
+                              {{2, 7}}                                                   {{{11, 12}, {3, 11}}}
+                              {{3, 6}}                             sorted edges => {{1, 9}  }
+                              {{4, 5}}                                             {{2, 10} }
+                              {{5, 6}}                                             {{3, 11} }
+                              {{5, 8}}                                             {{4, 12} }
+                              {{6, 7}}                                             {{5, 6}  }
+                              {{7, 8}}                                             {{5, 8}  }
+                                                                                   {{5, 12} }
+                                                                                   {{6, 7}  }
+                                                                                   {{6, 11} }
+                                                                                   {{7, 8}  }
+                                                                                   {{7, 10} }
+                                                                                   {{8, 9}  }
+                                                                                   {{9, 10} }
+                                                                                   {{11, 12}}
+
+o12 : Option</code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li><span><a title="A general datatype for a network" href="___Network.html">Network</a> -- A general datatype for a network</span></li>
+          <li><span><a title="A constructor method for the Network data type" href="_get__Network.html">getNetwork(List,List,List)</a> -- A constructor method for the Network data type</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="waystouse">
+          <h2>Ways to use <span class="tt">addNetworkEdge</span>:</h2>
+          <ul>
+            <li><kbd>addNetworkEdge(Network,List,List)</kbd></li>
+            <li><kbd>addNetworkEdge(Network,List,ZZ)</kbd></li>
+          </ul>
+        </div>
+        <div class="waystouse">
+          <h2>For the programmer</h2>
+          <p>The object <a title="Add an edge by dividing two existing edges and add a new pair of reticulation edges to a Network data type." href="_add__Network__Edge.html">addNetworkEdge</a> is <span>a <a title="a type of method function" href="/opt/homebrew/share/doc/Macaulay2/Macaulay2Doc/html/___Method__Function.html">method function</a></span>.</p>
+        </div>
+        <hr>
+        <div class="waystouse">
+          <p>The source of this document is in <span class="tt">/Users/rickeyhuang/Desktop/Repositories/JCNetworkParameterization/docs/Documentation.m2:327:0</span>.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
