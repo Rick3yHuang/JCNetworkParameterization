@@ -30,5 +30,5 @@ needs "PhylogeneticsIdentifiability/EXPERIMENTS/4-Leaf-Level-1-Parameter-Generat
 -- Sanity checks
 peek N4Leaves
 peek M4Leaves
-computeParametrization(N4Leaves,M4Leaves,false) -- parametrization without the Fourier coordinates
-computeParametrization(N4Leaves,M4Leaves,true) -- parametrization with the Fourier coordinates
+elapsedTime computeParametrization(N4Leaves,M4Leaves,false) -- parametrization without the Fourier coordinates
+elapsedTime computeParametrization(N4Leaves,M4Leaves,true) -- parametrization with the Fourier coordinates
