@@ -47,10 +47,10 @@ This usage of this methods is able to add multiple reticulations one by one with
 
 ## Todo
 
-- [ ] Change "Model" datatype to name "FourierIndices", and change the "NucleotideSequence" datatype to "FourierEquivalenceClasses" (or something to this effect). Also need to change the functions `getNucleotideSequence`, `getModel`, etc.
+- [x] Change "Model" datatype to name "FourierIndices", and change the "NucleotideSequence" datatype to "FourierEquivalenceClasses" (or something to this effect). Also need to change the functions `getNucleotideSequence`, `getModel`, etc.
 - [x] Update the function `computeDimensionNumerically` in `Parameterization-Generation.m2` (add to examples, add documentation)
-- [ ] change "nucleotideSeq" to "equivclass" or something in `iMap`
-- [ ] we need to figure out why we have different dimensions in the half-ziggurat case `/M2/JCNetworkParameterization/EXPERIMENTS/Paper_Examples/`
+- [x] change "nucleotideSeq" to "equivclass" or something in `iMap`
+- [x] we need to figure out why we have different dimensions in the half-ziggurat case `/M2/JCNetworkParameterization/EXPERIMENTS/Paper_Examples/`
 - [ ] we need to rerun our computations with the new code
 - [ ] add examples to documentation
 - [ ] read through algorithm section in paper
