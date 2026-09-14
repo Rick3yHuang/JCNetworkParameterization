@@ -27,19 +27,19 @@ getLevel Network := N -> N#"level"
 ---------------------------------------------------------------------
 --- Define a data type for representing models-----------------------
 ---------------------------------------------------------------------
-Model = new Type of MutableHashTable
+FourierIndices = new Type of MutableHashTable
 
 -- Define a constructor for the Model data type
-getModel = method()
-getModel (List,HashTable) := (necleotideSequence,transformTable) -> (
-    new Model from {
-        "nucleotide sequence" => necleotideSequence,
-        "transform table" => transformTable -- transform table transforms nucleotide to fourier coordinates
+getFourierIndices = method()
+getFourierIndices (List,HashTable) := (leafPatternClasses,groupLabeling) -> (
+    new FourierIndices from {
+        "leaf pattern classes" => leafPatternClasses,
+        "group labeling" => groupLabeling
     }
 )
 
 -- Define accessor methods for the Model data type
-getNucleotideSequence = method()
-getNucleotideSequence Model := M -> VerticalList M#"nucleotide sequence"
-getTransformTable = method()
-getTransformTable Model := M -> M#"transform table"
+getLeafPatternClasses = method()
+getLeafPatternClasses FourierIndices := FI -> VerticalList FI#"leaf pattern classes"
+getGroupLabeling = method()
+getGroupLabeling FourierIndices := FI -> FI#"group labeling"

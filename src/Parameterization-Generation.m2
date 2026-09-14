@@ -1,49 +1,62 @@
--*
-Compute the parameterization of a network under a given model
+--------------------------------------------------------------------------------------------
+-*---Compute the parameterization of a network under a given model--------------------------
+--------------------------------------------------------------------------------------------
 Input: 
-N	  -- a network of Network type
-M	  -- a model M of Model type
+  N	    -- a network of Network type
+  FI	    -- Fourier coordinates indexing info of the model of FourierIndices type
 Optional Input:
-includeQs -- a Boolean variable which specifies whether or not to include the Fourier coordinates in the output
-Output: 
-polynomials representing the parameterization.
-
-If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
-If includeQs is false, then the polynomials are in the ring only with variables a and b's.
-(Created by mh, modified by rh on 2024-11-04)
-*-
+  includeQs -- a Boolean variable which specifies whether or not to include the Fourier
+               coordinates in the output
+	       
+Output: polynomials representing the parameterization.
+  If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
+  If includeQs is false, then the polynomials are in the ring only with variables a and b's.
+-------------------------------------------------------------------------------------------
+*------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 computeParameterization = method(Options => {includeQs => true}) 
-computeParameterization (Network, Model) := o-> (N,M) -> (
+computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
     a := local a;
     b := local b;
     e := local e;
     i := local i;
     q := local q;
     nLeaves := #(getLeaves N);
-    y := getTransformTable M;
-    L := getNucleotideSequence M; -- the equivance classes
-    reticulations := getReticulationEdges N; edges := getEdges N;
-    
-    -- Constructing the boolean (quotation) ring R = QQ[e_,a_,b_,i_]/(e_^2, a_^2, b_^2, i_^2)
+    groupLabeling := getGroupLabeling FI;     -- the group labeling for the model
+    leafPatterns := getLeafPatternClasses FI; -- the leaf pattern classes for the model
+    reticulations := getReticulationEdges N;  -- the reticulation edges for the network
+    edges := getEdges N;		      -- the edges of the network
+
+    -- Rings construction
     varList := flatten(apply(#edges, j -> {e_(edges#j), a_(edges#j), b_(edges#j)})) | toList(i_1..i_nLeaves);
     S := QQ[varList]; -- this ring contains variables e, a, and b, each indexed by the edges
+    -- Constructing the boolean (quotient) ring R = QQ[e_,a_,b_,i_]/(e_^2, a_^2, b_^2, i_^2)
     varSqList := apply((gens S)_{0..3*(#edges)-1}, j -> j^2);
     R := S/(ideal varSqList);
-    sigma := generateSigma(N,R); -- sigma is the state vector for each edge before deleting edges and evaluate
-    -- List out the fourier coordinates (the q-variables)
-    fourierCoordinates := toList apply(L,j-> q_(toSequence apply(#j, k -> y#(j#k)))); 
+    -- output ring AB contains only the a and b variables
+    AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
+    -- Adding the Fourier coordinates (the q-variables) to the ring
+    fourierCoordinates := toList apply(leafPatterns,j-> q_(toSequence apply(#j, k -> groupLabeling#(j#k)))); 
     ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
-    out := apply(#L, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(generateQ(sigma,N,L#j,R),ABQ));   
-    if not o#includeQs then (
-	parameterization := apply(L,j -> generateQ(sigma,N,j,R));
-	AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
-	out = apply(parameterization, f -> sub(f,AB));
+    
+    sigma := generateSigma(N,R);
+    parameterization := apply(leafPatterns,j -> generateQ(sigma,N,j,R));
+    out := apply(parameterization, f -> sub(f,AB));
+    if o#includeQs then (
+	out = apply(#leafPatterns, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(parameterization#j,ABQ));
 	);
+--    out := apply(#leafPatterns, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(generateQ(sigma,N,leafPatterns#j,R),ABQ));   
+--    if not o#includeQs then (
+--	parameterization := apply(leafPatterns,j -> generateQ(sigma,N,j,R));
+--	out = apply(parameterization, f -> sub(f,AB));
+--	);
     out
     )
 
--*
-This function generates the state matrix for a given network N in the ring R. This is a subroutine for computeParameterization.
+--------------------------------------------------------------------------------------------
+-*---This function generates the state matrix for a given network N in the ring R.----------
+-----This is a subroutine for computeParameterization.--------------------------------------
+--------------------------------------------------------------------------------------------
 Input:
 N -- a network of Network type
 R -- the ring in which the parameterization is computed
@@ -158,7 +171,7 @@ iMap (Sequence,ZZ,Ring) := (nucleotideSeq,n,R) -> (
     )
 
 
--- This function finds a variable in a list of variables given its string name -
+-- This function finds a variable in a list of variables given its string name 
 -- this is used when working with polynomials which were defined locally (in
 -- another function), for which we need to extract the variables.
 findVariable = method()

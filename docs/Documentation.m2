@@ -38,10 +38,10 @@ doc ///
     computeParameterization
     computeDimensionNumerically
     Network
-    Model
-    getModel
-    getNucleotideSequence
-    getTransformTable
+    FourierIndices
+    getFourierIndices
+    getLeafPatternClasses
+    getGroupLabeling
     getNetwork
     getReticulationEdges
     getEdges
@@ -65,9 +65,9 @@ doc ///
 
 doc /// 
   Key
-    Model
+    FourierIndices
   Headline
-    A general datatype for a model
+    A general datatype for the Fourier index information
   Description
     Text
 
@@ -81,17 +81,17 @@ doc ///
 doc ///
   Key
    computeParameterization
-   (computeParameterization,Network,Model)
+   (computeParameterization,Network,FourierIndices)
    [computeParameterization,includeQs]
   Headline
     Compute the parameterization of a given network under a given model
   Usage
-    computeParameterization(N,M)
+    computeParameterization(N,FI)
   Inputs
     N: Network
        a network indicating the edges, leaves, reticulation edges, and level of the network.
-    M: Model
-       a model including the information about the representatives and converters
+    FI: FourierIndices
+       a FourierIndices data type including the leaf pattern classes and group labeling for the model
     includeQs => Boolean
        a boolean value indicating whether the Fourier coordinates should be included in the parameterization
   Outputs
@@ -102,96 +102,96 @@ doc ///
      Let N3LL2 be a 3-leaf level-2 network and M3L be a Jukes-Canter phylogenetic model. This function computes the
      parameterization of N3LL2 under the model M3L. The output is a list of polynomials representing the parameterization.
    Example
-     y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-     L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-     M3L = getModel(L3L,y3L)
+     leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+     groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+     fourierIndices3L = getFourierIndices(leafPattern3L,groupLabeling3L);
      leaves3LL2 = {1,2,3};
-     EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+     edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-     N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
-     netList computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
-     netList computeParameterization(N3LL2,M3L)
+     network3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+     netList computeParameterization(network3LL2,fourierIndices3L,includeQs => false) -- parametrization without the Fourier coordinates
+     netList computeParameterization(network3LL2,fourierIndices3L)
   SeeAlso
-    (getModel,List,HashTable)
     (getNetwork,List,List,List)
+    (getFourierIndices,List,HashTable)
 ///
 
 doc /// 
   Key
-    getModel
-    (getModel,List,HashTable)
+    getFourierIndices
+    (getFourierIndices,List,HashTable)
   Headline
     A constructor method for the Model data type
   Usage
-    getModel(necleotideSequence,transformTable)
+    getFourierIndices(leafPatternClasses,groupLabeling)
   Inputs
-    necleotideSequence: List
-       a list of nucleotides used in the model
-    transformTable: HashTable
-       a hash table indicating the representatives and converters for the model
+    leafPatternClasses: List
+       a list of leaf pattern classes for the model
+    groupLabeling: HashTable
+       a hash table indicating the representatives and the group labeling for the network
   Outputs
-    M: Model
-       a Model data type including the nucleotide sequence and transform table
+    fourierIndices: FourierIndices
+       a FourierIndices data type including the leaf pattern classes and group labeling for the model
   Description
     Text
-      The following example constructs a Model data type for the Jukes-Cantor model.
+      The following example constructs a FourierIndices data type for a Jukes-Cantor model on three leaves.
     Example
-      y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-      L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-      M3L = getModel(L3L,y3L)
+      leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+      groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L)
 ///
 
 
 doc /// 
   Key
-    getNucleotideSequence
-    (getNucleotideSequence,Model)
+    getLeafPatternClasses
+    (getLeafPatternClasses,FourierIndices)
   Headline
-    An accessor method for the nucleotide sequence of a Model data type
+    An accessor method for the leaf pattern classes of a FourierIndices data type
   Usage
-    getNucleotideSequence(Model)
+    getLeafPatternClasses(FourierIndices)
   Inputs
-    M: Model
-       a Model data type including the nucleotide sequence and transform table
+    fourierIndices: FourierIndices
+       a FourierIndices data type including the leaf pattern classes and group labeling for the model
   Outputs
-    nucleotideSequence: VerticalList
-       a VerticalList  of nucleotides used in the model
+    leafPatternClasses: List
+       a list of leaf pattern classes for the model
   Description
     Text
-       This method retrieves the nucleotide sequence from a given Model data type and return as a VerticalList.
+       This method retrieves the leaf pattern classes as a vertical list from a given FourierIndices data type.
     Example
-       y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-       L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-       M3L = getModel(L3L,y3L);
-       getNucleotideSequence M3L
+       leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+       groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L);
+       getLeafPatternClasses fourierIndices3L
   SeeAlso
-    (getModel,List,HashTable)
+    (getFourierIndices,List,HashTable)
 ///
 
 doc ///
   Key
-    getTransformTable
-    (getTransformTable,Model)
+    getGroupLabeling
+    (getGroupLabeling,FourierIndices)
   Headline
-    An accessor method for the transform table of a Model data type
+    An accessor method for the group labeling of a FourierIndices data type
   Usage
-    getTransformTable(Model)
+    getGroupLabeling(FourierIndices)
   Inputs
-    M: Model
-       a Model data type including the nucleotide sequence and transform table
+    fourierIndices: FourierIndices
+       a FourierIndices data type including the leaf pattern classes and group labeling for the model
   Outputs
-    transformTable: HashTable
-       a hash table indicating the representatives and converters for the model
+    groupLabeling: HashTable
+       a hash table indicating the representatives and the group labeling for the network
   Description
     Text
-       This method retrieves the hash table from a given Model data type.
+       This method retrieves the group labeling as a hash table from a given FourierIndices data type.
     Example
-       y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-       L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-       M3L = getModel(L3L,y3L);
-       getTransformTable M3L
+       leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+       groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L);
+       getGroupLabeling fourierIndices3L
   SeeAlso
-    (getModel,List,HashTable)
+    (getFourierIndices,List,HashTable)
 ///
 
 doc /// 
@@ -345,17 +345,17 @@ doc ///
       computes the parameterization of N3LL2 under M3L without the Fourier coordinates and then
       computes the dimension of the parameterization numerically.
     Example
-      y3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-      L3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-      M3L = getModel(L3L,y3L)
+      leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+      groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      fourierIndices3L = getFourierIndices(leafPattern3L,groupLabeling3L);
       leaves3LL2 = {1,2,3};
-      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
       reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
-      paramerterization = computeParameterization(N3LL2,M3L,includeQs => false) -- parametrization without the Fourier coordinates
+      network3LL2 = getNetwork(edgePairList3LL2,leaves3LL2,reticulationPairList3LL2)
+      paramerterization = computeParameterization(network3LL2,fourierIndices3L,includeQs => false) -- parametrization without the Fourier coordinates
       computeDimensionNumerically paramerterization
   SeeAlso
-    (computeParameterization,Network,Model)
+    (computeParameterization,Network,FourierIndices)
 ///
 
 --------------------------------------------------

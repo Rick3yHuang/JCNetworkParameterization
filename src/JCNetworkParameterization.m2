@@ -1,6 +1,6 @@
 -*- coding: utf-8 -*-
 newPackage("JCNetworkParameterization",
-    AuxiliaryFiles => true, --swap to true before building. jkl 2025-11-07
+    AuxiliaryFiles => false, --swap to true before building. jkl 2025-11-07
     Version => "0.1",
     Authors => {
 		{Name => "Hawai`i Phylogentics Identifibillity group"
@@ -20,13 +20,13 @@ newPackage("JCNetworkParameterization",
 export {
     -- Data Type
     "Network",
-    "Model",
+    "FourierIndices",
     "getNetwork",
-    "getModel",
+    "getFourierIndices",
     "getEdges",
     "getReticulationEdges",
-    "getNucleotideSequence",
-    "getTransformTable",
+    "getLeafPatternClasess",
+    "getGroupLabeling",
     -- Methods
     "computeParameterization",
     "addNetworkEdge",

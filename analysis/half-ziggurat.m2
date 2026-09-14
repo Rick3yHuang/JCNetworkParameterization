@@ -23,12 +23,12 @@ existingSourceNodes = {8,10,12,14,16,18}; -- sources of new reticulation edges
 
 network = initialNetwork;
 maxR = 7; -- we'll build networks up to 7 reticulations
-for i from 0 to maxR-1 do (
+for i from 0 to min(nr,maxR) do (
     -- compute and print dimension for network
     << "-*" << endl;
     << "Network N_" << i << ":" << endl; -- name of network in paper
     << peek network << endl;
-    networkParam = computeParameterization(network,M4L,includeQs => false);
+    networkParam = computeParameterization(network,fourierIndices4L,includeQs => false);
     networkDimension = computeDimensionNumerically networkParam;
     << "Dimension of affine network variety             : " << networkDimension << endl;
     << "*-" << endl;
@@ -56,7 +56,7 @@ needs "../analysis/half-ziggurat.m2"
 
 -- Find parameterization
 peek myNetwork
-peek M4L
+peek fourierIndices4L
 p = toList computeParameterization(myNetwork,M4L,includeQs => false); -- parametrization without the Fourier coordinates
 
 -- find phi
