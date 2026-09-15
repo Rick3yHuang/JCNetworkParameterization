@@ -45,11 +45,6 @@ computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
     if o#includeQs then (
 	out = apply(#leafPatterns, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(parameterization#j,ABQ));
 	);
---    out := apply(#leafPatterns, j -> findVariable(flatten entries vars ABQ, toString fourierCoordinates#j) - sub(generateQ(sigma,N,leafPatterns#j,R),ABQ));   
---    if not o#includeQs then (
---	parameterization := apply(leafPatterns,j -> generateQ(sigma,N,j,R));
---	out = apply(parameterization, f -> sub(f,AB));
---	);
     out
     )
 
@@ -58,11 +53,13 @@ computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
 -----This is a subroutine for computeParameterization.--------------------------------------
 --------------------------------------------------------------------------------------------
 Input:
-N -- a network of Network type
-R -- the ring in which the parameterization is computed
+   N       -- a network of Network type
+   R       -- the ring in which the parameterization is computed
 Output:
-a state matrix sigma in R representing the states at each node of the network N
-*-
+   a state matrix sigma in R representing the states at each node of the network N
+--------------------------------------------------------------------------------------------
+*-------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 generateSigma = method()
 generateSigma (Network,Ring) := (N,R) -> (
     Rvars := flatten entries vars R;

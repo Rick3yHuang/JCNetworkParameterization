@@ -11,17 +11,22 @@ To build documentation, go to `M2/JCNetworkParameterization.m2`, open Macaulay2,
 
 A ```Network``` ```N``` contains informations of edges, leaves, reticulation edges, and level of the network
 
-A ```Model``` ```M``` contains information of the nuclotide sequence and transformation table for the Fourier coordinates
-k
+A ```FourierIndices``` ```fourierIndices``` contains the Fourier index information
+
 ## Key Method Functions
+
+# ```computeParameterization```
 
 Function ```computeParameterization``` of this package can be used to compute the parameterization of given network under a given model
 
-The usage of ```computeParameterization``` is ```computeParameterization(M,N,includeQs)```, and the output is a list of polynomials as the parameterizations of the network ```N``` under the model ```M```
+The usage of ```computeParameterization``` is ```computeParameterization(M,fourierIndices,includeQs)```, and the output is a list of polynomials as the parameterizations of the network ```N```.
 
 ```includeQs``` is an optional input as a ```Boolean```
 - If ```includeQs => true``` then the Fourier coodinates are included in the parameterization
 - If ```includeQs => false``` then the Fourier coodinates are not included in the parameterization
+
+
+# ```computeParameterization```
 
 Function ```addNetworkEdges``` provides a faster way to construct a network
 
