@@ -39,12 +39,6 @@ One usage of ```addNetworkEdges``` is ```addNetworkEdges(N,edgesToDivide,vertexI
 
 This usage of this methods is able to add multiple reticulations one by one with one call of the function
 
-
-## Other
-
-`OSCAR-NetworkParametrization/` -- this code not working yet
-
-
 ## Todo
 
 - [x] Change "Model" datatype to name "FourierIndices", and change the "NucleotideSequence" datatype to "FourierEquivalenceClasses" (or something to this effect). Also need to change the functions `getNucleotideSequence`, `getModel`, etc.
