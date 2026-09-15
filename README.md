@@ -15,7 +15,7 @@ A ```FourierIndices``` ```fourierIndices``` contains the Fourier index informati
 
 ## Key Method Functions
 
-# ```computeParameterization```
+### ```computeParameterization```
 
 Function ```computeParameterization``` of this package can be used to compute the parameterization of given network under a given model
 
@@ -26,7 +26,7 @@ The usage of ```computeParameterization``` is ```computeParameterization(M,fouri
 - If ```includeQs => false``` then the Fourier coodinates are not included in the parameterization
 
 
-# ```computeParameterization```
+### ```computeParameterization```
 
 Function ```addNetworkEdges``` provides a faster way to construct a network
 
