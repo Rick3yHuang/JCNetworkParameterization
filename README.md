@@ -26,7 +26,7 @@ The usage of ```computeParameterization``` is ```computeParameterization(M,fouri
 - If ```includeQs => false``` then the Fourier coodinates are not included in the parameterization
 
 
-### ```computeParameterization```
+### ```addNetworkEdges```
 
 Function ```addNetworkEdges``` provides a faster way to construct a network
 

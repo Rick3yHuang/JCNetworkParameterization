@@ -5,9 +5,9 @@ Network = new Type of MutableHashTable
 
 -- Define a constructor for the Network data type
 getNetwork = method()
-getNetwork (List,List,List) := (EPListSorted,leaves,reticulationEdges) -> (
+getNetwork (List,List,List) := (edgePairListSorted,leaves,reticulationEdges) -> (
     new Network from {
-        "sorted edges" => VerticalList sort apply(EPListSorted,ep -> sort(ep)),
+        "sorted edges" => VerticalList sort apply(edgePairListSorted,ep -> sort(ep)),
         "leaves" => leaves,
         "reticulation edges" => VerticalList reticulationEdges,
 	"level" => #reticulationEdges
