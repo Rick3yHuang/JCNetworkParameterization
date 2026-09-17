@@ -89,7 +89,12 @@ generateSigma (Network,Ring) := (N,R) -> (
     v := transpose matrix{Rvars_{-numLeaves..-1}|apply(numVertices-numLeaves,j -> 0)};
     -- Find sigma
     sigma := mutableMatrix sub(v,R);
-    for j from 1 to #edgePairListSorted do sigma = sigma + (matA^j)*(mutableMatrix v);
+    w := mutableMatrix sub(v,R);
+    for j from 1 to #edgePairListSorted do (
+	w = matA*w;
+	if w == 0 then break;
+	sigma = sigma + w;
+	);
     transpose matrix{apply(numRows sigma, j -> sum flatten entries (coefficients sigma_(j,0))_0)}
     )
 
