@@ -18,5 +18,5 @@ needs "../analysis/proof-of-concept-examples/3-leaf-networks/3-leaf-level-2-netw
 -- Sanity checks
 peek network3LL2
 peek fourierIndices3L
-netList computeParameterization(network3LL2,fourierIndices3L,includeQs => false) -- parametrization without the Fourier coordinates
-netList computeParameterization(network3LL2,fourierIndices3L) -- parametrization with the Fourier coordinates
+netList computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
+netList computeParameterization(network3LL2,leafPatternDict3L) -- parametrization with the Fourier coordinates

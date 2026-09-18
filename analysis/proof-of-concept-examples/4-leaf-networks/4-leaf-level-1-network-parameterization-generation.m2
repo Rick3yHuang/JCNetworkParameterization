@@ -13,7 +13,7 @@ needs "../analysis/proof-of-concept-examples/4-leaf-networks/4-leaf-model-init.m
 needs "../analysis/proof-of-concept-examples/4-leaf-networks/4-leaf-level-1-network-parameterization-generation.m2"
 -- Sanity checks
 peek network4LL1
-peek fourierIndices4L
-netList computeParameterization(network4LL1,fourierIndices4L,includeQs => false) -- parametrization without the Fourier coordinates
-netList computeParameterization(network4LL1,fourierIndices4L) -- parametrization with the Fourier coordinates
+peek leafPatternDict4L
+netList computeParameterization(network4LL1,leafPatternDict4L,includeQs => false) -- parametrization without the Fourier coordinates
+netList computeParameterization(network4LL1,leafPatternDict4L) -- parametrization with the Fourier coordinates
 

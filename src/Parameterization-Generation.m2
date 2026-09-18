@@ -2,30 +2,30 @@
 -*---Compute the parameterization of a network under a given model--------------------------
 --------------------------------------------------------------------------------------------
 Input: 
-  N	    -- a network of Network type
-  FI	    -- Fourier coordinates indexing info of the model of FourierIndices type
+N	    -- a network of Network type
+FI	    -- Fourier coordinates indexing info of the model of FourierIndices type
 Optional Input:
-  includeQs -- a Boolean variable which specifies whether or not to include the Fourier
-               coordinates in the output
-	       
+includeQs -- a Boolean variable which specifies whether or not to include the Fourier
+coordinates in the output
+    
 Output: polynomials representing the parameterization.
-  If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
-  If includeQs is false, then the polynomials are in the ring only with variables a and b's.
+If includeQs is true, then the polynomials are in the ring with variables a, b, and q's.
+If includeQs is false, then the polynomials are in the ring only with variables a and b's.
 -------------------------------------------------------------------------------------------
 *------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 computeParameterization = method(Options => {includeQs => true}) 
-computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
+computeParameterization (Network, LeafPatternDict) := o-> (N,leafPatternDict) -> (
     a := local a;
     b := local b;
     e := local e;
     i := local i;
     q := local q;
     nLeaves := #(getLeaves N);
-    groupLabeling := getGroupLabeling FI;     -- the group labeling for the model
-    leafPatterns := getLeafPatternClasses FI; -- the leaf pattern classes for the model
-    reticulations := getReticulationEdges N;  -- the reticulation edges for the network
-    edges := getEdges N;		      -- the edges of the network
+    numericLabeling := getNumericLabeling leafPatternDict;     -- the group labeling for the model
+    leafPatterns := getLeafPatternClasses leafPatternDict;     -- the leaf pattern classes for the model
+    reticulations := getReticulationEdges N;		       -- the reticulation edges for the network
+    edges := getEdges N;				       -- the edges of the network
 
     -- Rings construction
     varList := flatten(apply(#edges, j -> {e_(edges#j), a_(edges#j), b_(edges#j)})) | toList(i_1..i_nLeaves);
@@ -36,11 +36,11 @@ computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
     -- output ring AB contains only the a and b variables
     AB := QQ[flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
     -- Adding the Fourier coordinates (the q-variables) to the ring
-    fourierCoordinates := toList apply(leafPatterns,j-> q_(toSequence apply(#j, k -> groupLabeling#(j#k)))); 
+    fourierCoordinates := toList apply(leafPatterns,j-> q_(toSequence apply(#j, k -> numericLabeling#(j#k)))); 
     ABQ := QQ[fourierCoordinates,flatten(apply(#edges, j -> {a_(edges#j),b_(edges#j)}))];
     
     sigma := generateSigma(N,R);
-    parameterization := apply(leafPatterns,j -> generateQ(sigma,N,j,R));
+    parameterization := apply(leafPatterns,j -> generateQ(sigma,N,j,leafPatternDict));
     out := apply(parameterization, f -> sub(f,AB));
     if o#includeQs then (
 	out = apply(#leafPatterns, j ->
@@ -55,10 +55,10 @@ computeParameterization (Network, FourierIndices) := o-> (N,FI) -> (
 -----This is a subroutine for computeParameterization.--------------------------------------
 --------------------------------------------------------------------------------------------
 Input:
-   N       -- a network of Network type
-   R       -- the path ring in which sigma is computed
+N       -- a network of Network type
+R       -- the path ring in which sigma is computed
 Output:
-   a state matrix sigma in R representing the states at each node of the network N
+a state matrix sigma in R representing the states at each node of the network N
 --------------------------------------------------------------------------------------------
 *-------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ generateSigma (Network,Ring) := (N,R) -> (
     scan(#leafEdgeList,j -> (
 	    pair := leafEdgeList_j;
 	    matA_(pair_1-1,pair_0-1) = findVariable(Rvars,concatenate("e_",toString pair));
-	));
+	    ));
     scan(#edgeList,k -> (
 	    pair := edgeList_k;
 	    matA_(pair_1-1,pair_0-1) = findVariable(Rvars,concatenate("e_",toString pair));
@@ -99,60 +99,82 @@ generateSigma (Network,Ring) := (N,R) -> (
     )
 
 --------------------------------------------------------------------------------------------
--*------------------------------------------------------------------------------------------
+-*----------------- Given a leaf pattern P (e.g. AAAA or ACGT), ----------------------------
+------------------- generate the Fourier coordinates for q_P of network N ------------------
 --------------------------------------------------------------------------------------------
-Given an equivalnce class i (e.g. AAAA or ACGT), generate the polynomial formula for q_i under network N
 Input:
-sigma		   -- the state matrix generated by generateSigma
+sigma	   -- the state matrix generated by generateSigma
 N		   -- a network of Network type
-nucleotideSequence -- a sequence of nucleotides (ACGT) represented as a list of representatives from the model M
-R		   -- the ring in which the parameterization is computed
+leafPattern	   -- a leaf assignment (e.g. AAAA or ACGT) 
+leafPatternDict -- a LeafPatternDict object containing the leaf patterns and group labeling
 Output:
-a polynomial in R representing the parameterization of the model for the given sequence under the network N
+a polynomial in R representing the Fourier coordinate q_P of network N
 --------------------------------------------------------------------------------------------
 *-------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
 generateQ = method()
-generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
+generateQ (Matrix,Network,Sequence,LeafPatternDict) := (sigma,N,leafPattern,leafPatternDict) -> (
+    R := ring sigma;
     Rvars := flatten entries vars R;
-    W := ZZ/2;
-    reticulationPairList := getReticulationEdges N; EPListSorted := getEdges N;
+    reticulationPairList := getReticulationEdges N;
+    edgePairListSorted := getEdges N;
+    groupLabeling := getGroupLabeling leafPatternDict;
+    -- Make group sum map based on leafPattern and group labeling
+    phi := makeGroupSumMap(leafPattern,groupLabeling,R);
+    -- Look up ring elements
     reticulationPairs := apply(reticulationPairList,j->apply(j,l->findVariable(Rvars,concatenate("e_",toString l))));
-    (F1,F2) := iMap(nucleotideSequence,#EPListSorted,R);
-    -- Enumerate all 2^k possible display trees (choose one incoming edge per reticulation)
-    k := #reticulationPairs;
-    discardedReticulation := apply(2^k,j -> apply(k,l -> reticulationPairs#l#(floor((j%(2^(l+1)))/(2^l)))));
-    out := 0;
-    edgeVariables := apply(#EPListSorted, j -> findVariable(Rvars,concatenate("e_",toString EPListSorted#j)));
-    for pair in discardedReticulation do (
-	currentRemainingEdges := edgeVariables;
-	remainingEdges := currentRemainingEdges;
-	for p in pair do remainingEdges = delete(p,remainingEdges);
-	prod := 1;
-	for ed in remainingEdges do (
-	    endPoints := value substring(2,toString ed);
-	    -- Set edge ed = 0 to disconnect the two subtrees for evaluating Σ
-	    zeroEdges := apply(#pair,j -> pair#j => 0)|{ed => 0};
-	    sigmaV := sub(sigma_(endPoints_0-1,0),zeroEdges);
-	    sigmaW := sub(sigma_(endPoints_1-1,0),zeroEdges);
-	    -- If both endpoints correspond to the trivial group element multiply by a_{v,w}
-	    if (sigmaV == 0 or sigmaW == 0) then (
-		prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints));
-		)else(
-		-- Otherwise evaluate the group-sum factor via Σ
-		oneEdges := apply(#remainingEdges,j -> remainingEdges#j => 1);
-		factorV := sub(sigmaV,oneEdges);
-		factorW := sub(sigmaW,oneEdges);
-		-- Compute group components (F1,F2) applied to factorV
-		element1 := F1 factorV;
-		element2 := F2 factorV;
+    edgeData := apply(edgePairListSorted, endpoints -> (
+	    {endpoints,
+		findVariable(Rvars,concatenate("e_",toString endpoints)),
+		findVariable(Rvars,concatenate("a_",toString endpoints)),
+		findVariable(Rvars,concatenate("b_",toString endpoints))
+		}
+	    ));
+    k := getLevel N;
+    -- Choose one incoming edge to discard at each reticulation.
+    -- output is a list of all 2^k possible sets of reticulation edges to discard
+    discardedReticulationSets := apply(2^k,j -> (
+	    apply(k, reticulationPairIndex -> (
+		    bit := floor(j/2^reticulationPairIndex) % 2;
+		    reticulationPairs#reticulationPairIndex#bit
+		    ))));
+    
+    out := 0_R;
+    -- Loop through all 2^k possible display trees
+    for discardedReticulations in discardedReticulationSets do (
+	-- Create display tree by only keep the edges that are not discarded
+	remainingEdgeData := select(edgeData,data -> not member(data#1,discardedReticulations));
+	-- rule for substituting 0 for the discarded edges in sigma
+	discardRule := apply(discardedReticulations,discardedEdge -> discardedEdge => 0);
+	-- apply the discard rule to sigma to get the state matrix for the display tree
+	treeSigma := sub(sigma,discardRule);
+	-- rule for substituting 1 for the retained edges in sigma
+	retainEdgeRule := apply(remainingEdgeData,data -> data#1 => 1);
+
+	prod := 1_R;
+	-- Loop through all edges in the display tree
+	for cutData in remainingEdgeData do (
+	    endPoints := cutData#0;
+	    cutEdge := cutData#1;
+	    aParam := cutData#2;
+	    bParam := cutData#3;
+    
+	    (v,w) := toSequence endPoints;
+	    -- Cut the current edge to separate the two components.
+	    sigmaV := sub(treeSigma_(v-1,0),{cutEdge => 0});
+	    sigmaW := sub(treeSigma_(w-1,0),{cutEdge => 0});
+	    edgeParam := aParam;
+	    -- If either component contains no labeled leaves, use a_{u,v}.
+	    if (sigmaV != 0 and sigmaW != 0) then (
+		-- Evaluate a group sum from one side using the precomputed ring map.
+		leafSumV := sub(sigmaV,retainEdgeRule);
+		groupSumV := evaluateGroupSum(leafSumV,phi);
 		-- If group element is (0,0) → use a_{v,w}, else b_{v,w}
-		if (element1 == 0_W and element2 == 0_W) then (
-		    prod = prod*findVariable(Rvars,concatenate("a_",toString endPoints))
-		    )else(
-		    prod = prod*findVariable(Rvars,concatenate("b_",toString endPoints))
+		if (groupSumV != {0,0}) then (
+		    edgeParam = bParam;
 		    );
-		)
+		);
+	    prod = prod*edgeParam;
 	    );
 	out = out + prod;
 	);
@@ -162,35 +184,44 @@ generateQ (Matrix,Network,Sequence,Ring) := (sigma,N,nucleotideSequence,R) -> (
 --------------------------------------------------------------------------------------------
 -- Helpers----------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
+-- make group sum map based on the group labeling for a given leaf assignment (e.g. AAAA or ACGT)
+makeGroupSumMap = method()
+makeGroupSumMap (Sequence,HashTable,Ring) := (leafPattern,groupLabeling,R) -> (
+    x := local x;
+    y := local y;
+    S := QQ[x,y];
 
--- This function returns two additive group maps (F1,F2): G^n -> W corresponding to a nucleotide sequence
--- This function is a subroutine for computing q -- it implements the bijection from nucleotide letters A,C,T,G to elements of the Klein 4 group.
--- Here, 'nucleotideSeq' is an equivalence class in L
-iMap = method()
-iMap (Sequence,ZZ,Ring) := (nucleotideSeq,n,R) -> (
-    W := ZZ/2;
-    h1 := hashTable{"nucleotideA" => 0_W, "nucleotideC" => 0_W, "nucleotideG" => 1_W, "nucleotideT" => 1_W};
-    h2 := hashTable{"nucleotideA" => 0_W, "nucleotideC" => 1_W, "nucleotideG" => 0_W, "nucleotideT" => 1_W};
-    F1 := map(W,R,apply(3*n,j->0)|apply(toList nucleotideSeq,j -> h1#("nucleotide"|toString j)));
-    F2 := map(W,R,apply(3*n,j->0)|apply(toList nucleotideSeq,j -> h2#("nucleotide"|toString j)));
-    return (F1,F2);
+    nLeaves := #leafPattern;
+    Rvars := flatten entries vars R;
+
+    leafImages := apply(toList leafPattern,nucleotide -> (
+	    groupLabel := groupLabeling#nucleotide;	 -- e.g. {0,1} for nucleotide C
+	    (groupLabel#0)*x + (groupLabel#1)*y		 -- e.g. 0*x + 1*y = y for nucleotide C
+	    ));
+
+    images := apply(#Rvars - nLeaves, j -> 0_S) | leafImages;
+    map(S,R,images)
     )
 
+-- Evaluate the group sum of based on a ring map phi
+evaluateGroupSum = method()
+evaluateGroupSum (RingElement,RingMap) := (leafSum,phi) -> (
+    -- e.g. under ACGT, g_2+g_4 -> {0,1} + {1,1} = {1,2} -> x+2y
+    groupSumInS := phi leafSum;
+    -- e.g. x+2y -> {1,2} -> {1,0} in Z_2 x Z_2
+    coordinates := flatten entries vars ring groupSumInS;
+    apply(coordinates, z -> lift(coefficient(z,groupSumInS),ZZ) % 2)
+    )
 
--- This function finds a variable in a list of variables given its string name 
--- this is used when working with polynomials which were defined locally (in
--- another function), for which we need to extract the variables.
+-- variable lookup: variable (string) -> variable (ring element) in ring defined locally
 findVariable = method()
 findVariable(List,String) := (varList,varString) -> (
     first select(varList,x -> toString x == varString)
     )
 
-
-
-
--------------------------------------------------------------
--- Add reticulations to a network ---------------------------
--------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+-- Add reticulations to a network ----------------------------------------------------------
+--------------------------------------------------------------------------------------------
 
 -- Function for constructing networks by adding reticuations
 
@@ -251,9 +282,9 @@ peek oo
 This function computes the dimension of a parameterization numerically
 Input: 
 parameterization	  -- a list of polynomials representing the parameterization
-                             (the form of a parameterization without q's, i.e., of
-      		             the form of the output of fourLeafParameterization with
-			     includeQs=false)
+(the form of a parameterization without q's, i.e., of
+    the form of the output of fourLeafParameterization with
+    includeQs=false)
 Output: 
 the dimension of the parameterized variety
 *-

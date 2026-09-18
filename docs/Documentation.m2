@@ -38,9 +38,10 @@ doc ///
     computeParameterization
     computeDimensionNumerically
     Network
-    FourierIndices
-    getFourierIndices
+    LeafPatternDict
+    getLeafPatternDict
     getLeafPatternClasses
+    getNumericLabeling
     getGroupLabeling
     getNetwork
     getReticulationEdges
@@ -65,9 +66,9 @@ doc ///
 
 doc /// 
   Key
-    FourierIndices
+    LeafPatternDict
   Headline
-    A general datatype for the Fourier index information
+    A general datatype for a set of leaf pattern equivalence classes and dictionaries of group labeling
   Description
     Text
 
@@ -81,17 +82,17 @@ doc ///
 doc ///
   Key
    computeParameterization
-   (computeParameterization,Network,FourierIndices)
+   (computeParameterization,Network,LeafPatternDict)
    [computeParameterization,includeQs]
   Headline
     Compute the parameterization of a given network under a given model
   Usage
-    computeParameterization(N,FI)
+    computeParameterization(N,leafPatternDict)
   Inputs
     N: Network
        a network indicating the edges, leaves, reticulation edges, and level of the network.
-    FI: FourierIndices
-       a FourierIndices data type including the leaf pattern classes and group labeling for the model
+    leafPatternDict: LeafPatternDict
+       a LeafPatternDict data type including the leaf pattern classes and group labeling the network.
     includeQs => Boolean
        a boolean value indicating whether the Fourier coordinates should be included in the parameterization
   Outputs
@@ -103,95 +104,128 @@ doc ///
      parameterization of N3LL2 under the model M3L. The output is a list of polynomials representing the parameterization.
    Example
      leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-     groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-     fourierIndices3L = getFourierIndices(leafPattern3L,groupLabeling3L);
+     numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3}
+     groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}}
+     leafPatternDict3L= getLeafPatternDict(leafPattern3L,numericLabeling3L,groupLabeling3L);
      leaves3LL2 = {1,2,3};
      edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
      network3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
-     netList computeParameterization(network3LL2,fourierIndices3L,includeQs => false) -- parametrization without the Fourier coordinates
-     netList computeParameterization(network3LL2,fourierIndices3L)
+     netList computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
+     netList computeParameterization(network3LL2,leafPatternDict3L)
   SeeAlso
     (getNetwork,List,List,List)
-    (getFourierIndices,List,HashTable)
+    (getLeafPatternDict,List,HashTable,HashTable)
 ///
 
 doc /// 
   Key
-    getFourierIndices
-    (getFourierIndices,List,HashTable)
+    getLeafPatternDict
+    (getLeafPatternDict,List,HashTable,HashTable)
   Headline
-    A constructor method for the Model data type
+    A constructor method for the LeafPatternDict data type
   Usage
-    getFourierIndices(leafPatternClasses,groupLabeling)
+    getLeafPatternDict(leafPatternClasses,numericLabeling,groupLabeling)
   Inputs
     leafPatternClasses: List
        a list of leaf pattern classes for the model
+    numericLabeling: HashTable
+       a hash table indicating the representatives and the numeric labeling for a network
     groupLabeling: HashTable
-       a hash table indicating the representatives and the group labeling for the network
+       a hash table indicating the representatives and the group labeling for a network
   Outputs
-    fourierIndices: FourierIndices
-       a FourierIndices data type including the leaf pattern classes and group labeling for the model
+    leafPatternDict: LeafPatternDict
+       a LeafPatternDict data type including the leaf pattern classes and group labeling for the model
   Description
     Text
-      The following example constructs a FourierIndices data type for a Jukes-Cantor model on three leaves.
+      The following example constructs a LeafPatternDict data type for a Jukes-Cantor model on a three-leaf network.
     Example
       leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-      groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-      fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L)
+      numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
+      leafPatternDict3L = getLeafPatternDict(leafPatternClasses3L,numericLabeling3L,groupLabeling3L)
 ///
 
 
 doc /// 
   Key
     getLeafPatternClasses
-    (getLeafPatternClasses,FourierIndices)
+    (getLeafPatternClasses,LeafPatternDict)
   Headline
-    An accessor method for the leaf pattern classes of a FourierIndices data type
+    An accessor method for the leaf pattern classes of a LeafPatternDict data type
   Usage
-    getLeafPatternClasses(FourierIndices)
+    getLeafPatternClasses(LeafPatternDict)
   Inputs
-    fourierIndices: FourierIndices
-       a FourierIndices data type including the leaf pattern classes and group labeling for the model
+    leafPatternDict: LeafPatternDict
+       a LeafPatternDict data type including the leaf pattern classes and group labeling for the model
   Outputs
     leafPatternClasses: List
        a list of leaf pattern classes for the model
   Description
     Text
-       This method retrieves the leaf pattern classes as a vertical list from a given FourierIndices data type.
+       This method retrieves the leaf pattern classes as a vertical list from a given LeafPatternDict data type.
     Example
        leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-       groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-       fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L);
-       getLeafPatternClasses fourierIndices3L
+       numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
+       leafPatternDict3L = getLeafPatternDict(leafPatternClasses3L,numericLabeling3L,groupLabeling3L)
+       getLeafPatternClasses leafPatternDict3L
   SeeAlso
-    (getFourierIndices,List,HashTable)
+    (getLeafPatternDict,List,HashTable,HashTable)
 ///
+
+doc /// 
+  Key
+	getNumericLabeling
+	(getNumericLabeling,LeafPatternDict)
+  Headline
+	An accessor method for the numeric labeling of a LeafPatternDict data type
+  Usage
+	getNumericLabeling(LeafPatternDict)
+  Inputs
+	leafPatternDict: LeafPatternDict
+	   a LeafPatternDict data type including the leaf pattern classes and group labeling for the model
+  Outputs
+	numericLabeling: HashTable
+	   a hash table indicating the representatives and the numeric labeling for the network
+  Description
+	Text
+	   This method retrieves the numeric labeling as a hash table from a given LeafPatternDict data type.
+	Example
+	   leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
+	   numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+	   groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
+	   leafPatternDict3L = getLeafPatternDict(leafPatternClasses3L,numericLabeling3L,groupLabeling3L)
+	   getNumericLabeling leafPatternDict3L
+  SeeAlso
+	(getLeafPatternDict,List,HashTable,HashTable)
+///	
 
 doc ///
   Key
     getGroupLabeling
-    (getGroupLabeling,FourierIndices)
+    (getGroupLabeling,LeafPatternDict)
   Headline
-    An accessor method for the group labeling of a FourierIndices data type
+    An accessor method for the group labeling of a LeafPatternDict data type
   Usage
-    getGroupLabeling(FourierIndices)
+    getGroupLabeling(LeafPatternDict)
   Inputs
-    fourierIndices: FourierIndices
-       a FourierIndices data type including the leaf pattern classes and group labeling for the model
+    leafPatternDict: LeafPatternDict
+       a LeafPatternDict data type including the leaf pattern classes and group labeling for the model
   Outputs
     groupLabeling: HashTable
        a hash table indicating the representatives and the group labeling for the network
   Description
     Text
-       This method retrieves the group labeling as a hash table from a given FourierIndices data type.
+       This method retrieves the group labeling as a hash table from a given LeafPatternDict data type.
     Example
        leafPatternClasses3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-       groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-       fourierIndices3L = getFourierIndices(leafPatternClasses3L,groupLabeling3L);
-       getGroupLabeling fourierIndices3L
+       numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+       groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
+       leafPatternDict3L = getLeafPatternDict(leafPatternClasses3L,numericLabeling3L,groupLabeling3L)
+       getGroupLabeling leafPatternDict3L
   SeeAlso
-    (getFourierIndices,List,HashTable)
+    (getLeafPatternDict,List,HashTable,HashTable)
 ///
 
 doc /// 
@@ -346,16 +380,17 @@ doc ///
       computes the dimension of the parameterization numerically.
     Example
       leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
-      groupLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
-      fourierIndices3L = getFourierIndices(leafPattern3L,groupLabeling3L);
+      numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
+      groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
+      leafPatternDict3L = getLeafPatternDict(leafPattern3L,numericLabeling3L,groupLabeling3L);
       leaves3LL2 = {1,2,3};
       edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
       reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
       network3LL2 = getNetwork(edgePairList3LL2,leaves3LL2,reticulationPairList3LL2)
-      paramerterization = computeParameterization(network3LL2,fourierIndices3L,includeQs => false) -- parametrization without the Fourier coordinates
+      paramerterization = computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
       computeDimensionNumerically paramerterization
   SeeAlso
-    (computeParameterization,Network,FourierIndices)
+    (computeParameterization,Network,LeafPatternDict)
 ///
 
 --------------------------------------------------

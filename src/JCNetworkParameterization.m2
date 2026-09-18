@@ -20,12 +20,13 @@ newPackage("JCNetworkParameterization",
 export {
     -- Data Type
     "Network",
-    "FourierIndices",
+    "LeafPatternDict",
     "getNetwork",
-    "getFourierIndices",
+    "getLeafPatternDict",
     "getEdges",
     "getReticulationEdges",
     "getLeafPatternClasess",
+    "getNumericLabeling",
     "getGroupLabeling",
     -- Methods
     "computeParameterization",

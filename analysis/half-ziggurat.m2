@@ -28,7 +28,7 @@ for i from 0 to min(nr,maxR) do (
     << "-*" << endl;
     << "Network N_" << i << ":" << endl; -- name of network in paper
     << peek network << endl;
-    networkParam = computeParameterization(network,fourierIndices4L,includeQs => false);
+    networkParam = computeParameterization(network,leafPatternDict4L,includeQs => false);
     networkDimension = computeDimensionNumerically networkParam;
     << "Dimension of affine network variety             : " << networkDimension << endl;
     << "*-" << endl;
@@ -56,13 +56,13 @@ needs "../analysis/half-ziggurat.m2"
 
 -- Find parameterization
 peek myNetwork
-peek fourierIndices4L
-p = toList computeParameterization(myNetwork,M4L,includeQs => false); -- parametrization without the Fourier coordinates
+peek leafPatternDict4L
+p = toList computeParameterization(myNetwork,leafPatternDict4L,includeQs => false); -- parametrization without the Fourier coordinates
 
 -- find phi
 
 paramRing = ring p_0 -- this returns the ring that p_0 lives in
-fourierCoordinates = toList apply((getNucleotideSequence M4L),j-> q_(toSequence apply(#j, k -> (getTransformTable M4L)#(j#k)))); -- builds the correctly-named fourier coordinate variables
+fourierCoordinates = toList apply((getNucleotideSequence leafPatternDict4L),j-> q_(toSequence apply(#j, k -> (getTransformTable M4L)#(j#k)))); -- builds the correctly-named fourier coordinate variables
 qRing = QQ[fourierCoordinates]
 
 phi = map(paramRing,qRing,p)

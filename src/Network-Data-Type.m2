@@ -27,19 +27,22 @@ getLevel Network := N -> N#"level"
 ---------------------------------------------------------------------
 --- Define a data type for representing models-----------------------
 ---------------------------------------------------------------------
-FourierIndices = new Type of MutableHashTable
+LeafPatternDict = new Type of MutableHashTable
 
 -- Define a constructor for the Model data type
-getFourierIndices = method()
-getFourierIndices (List,HashTable) := (leafPatternClasses,groupLabeling) -> (
-    new FourierIndices from {
+getLeafPatternDict = method()
+getLeafPatternDict (List,HashTable,HashTable) := (leafPatternClasses,nuermicLabeling,groupLabeling) -> (
+    new LeafPatternDict from {
         "leaf pattern classes" => leafPatternClasses,
+	"numeric labeling" => nuermicLabeling,
         "group labeling" => groupLabeling
     }
 )
 
 -- Define accessor methods for the Model data type
 getLeafPatternClasses = method()
-getLeafPatternClasses FourierIndices := FI -> VerticalList FI#"leaf pattern classes"
+getLeafPatternClasses LeafPatternDict := leafPatternDict -> VerticalList leafPatternDict#"leaf pattern classes"
+getNumericLabeling = method()
+getNumericLabeling LeafPatternDict := leafPatternDict -> leafPatternDict#"numeric labeling"
 getGroupLabeling = method()
-getGroupLabeling FourierIndices := FI -> FI#"group labeling"
+getGroupLabeling LeafPatternDict := leafPatternDict -> leafPatternDict#"group labeling"
