@@ -62,7 +62,7 @@ p = toList computeParameterization(myNetwork,leafPatternDict4L,includeQs => fals
 -- find phi
 
 paramRing = ring p_0 -- this returns the ring that p_0 lives in
-fourierCoordinates = toList apply((getNucleotideSequence leafPatternDict4L),j-> q_(toSequence apply(#j, k -> (getTransformTable M4L)#(j#k)))); -- builds the correctly-named fourier coordinate variables
+fourierCoordinates = toList apply((getLeafPatternClasses leafPatternDict4L),j-> q_(toSequence apply(#j, k -> (getNumericLabeling leafPatternDict4L)#(j#k)))); -- builds the correctly-named fourier coordinate variables
 qRing = QQ[fourierCoordinates]
 
 phi = map(paramRing,qRing,p)

@@ -220,82 +220,76 @@ findVariable(List,String) := (varList,varString) -> (
     )
 
 --------------------------------------------------------------------------------------------
--- Add reticulations to a network ----------------------------------------------------------
+-*------------------- Add reticulations to a network ----------------------------------------
 --------------------------------------------------------------------------------------------
+Input:
+N                          -- a network of Network type
+edgesToDivide              -- two edges to subdivide
+vertexInNewReticulation     -- an endpoint of exactly one chosen edge, selecting
+                           -- which subdivision vertex becomes the reticulation vertex
 
--- Function for constructing networks by adding reticuations
+For multiple reticulations, supply a list of edge pairs and a corresponding
+list of endpoints. The additions are performed sequentially.
 
--- This can be run in two modes, either (1) by adding one reticulation at a
--- time, or (2) by adding multiple reticulations at once.
+Output:
+a network with the specified reticulations added
+--------------------------------------------------------------------------------------------
+*-------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 addNetworkEdge = method()
+
+-- For a single reticulation, supply a pair of edges and an endpoint
 addNetworkEdge (Network,List,ZZ) := (N,edgesToDivide,vertexInNewReticulation) -> (
-    edges := getEdges N; reticulationEdges := getReticulationEdges N;
-    leaves := getLeaves N; level := getLevel N;
-    numVertices := max flatten edges;
+    edges := getEdges N;
+    reticulationPairs := getReticulationEdges N;
+    chosenEdges := apply(edgesToDivide, e -> sort e);
+
+    assert(#chosenEdges == 2);
+    (e1,e2) := toSequence chosenEdges;
+    assert(e1 != e2);
+    assert(all(chosenEdges, e -> member(e,chosenEdges)));
     -- make sure that the edges to divide are not reticulation edges
-    scan(edgesToDivide,e -> assert(#select(reticulationEdges,r -> r_0 == e or r_1 == e) == 0));
-    (edgeToDivide1,edgeToDivide2) := toSequence edgesToDivide;
-    edgesToAdd := {{edgeToDivide1_0,numVertices+1},{edgeToDivide1_1,numVertices+1},
-	{edgeToDivide2_0,numVertices+2},{edgeToDivide2_1,numVertices+2},
-	{numVertices+1,numVertices+2}};
-    if #(select(edgeToDivide1,v -> v == vertexInNewReticulation)) != 0 then(
-	newReticulationEdges := {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+1}}};
-	) else (
-	newReticulationEdges = {{{numVertices+1,numVertices+2},{vertexInNewReticulation,numVertices+2}}};
-	);
-    newEdges := delete(sort edgeToDivide2,edges);
-    newEdges = delete(sort edgeToDivide1,newEdges);
-    newEdges = newEdges | edgesToAdd;
-    getNetwork(newEdges,leaves,reticulationEdges|newReticulationEdges)
+    assert(all(reticulationPairs, pair -> all(pair, e -> not member(chosenEdges,e))));
+    -- make sure that the vertex in the new reticulation is a vertex of one of the edges to divide
+    assert(#select(chosenEdges, e -> member(vertexInNewReticulation,e)) == 1);
+
+    u := 1 + max flatten edges;
+    v := 1 + u;
+    -- assume u is on e1 and v is on e2, and r is the vertex in the new reticulation
+    r := if member(vertexInNewReticulation,e1) then u else v;
+    
+    newEdges := select(edges, e -> not member(e,chosenEdges)) | {{e1_0,u},{e1_1,u},{e2_0,v},{e2_1,v},{u,v}};
+    newReticulationPairs := reticulationPairs | {{{u,v},{vertexInNewReticulation,r}}};
+    getNetwork(newEdges,getLeaves N, newReticulationPairs)
     )
--* Here's an example of how to use addEdge:
-edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
-reticulations = {{{6,7},{7,8}}};
-leaves = {1,2,3,4};
-exampleNetwork = getNetwork(edges,leaves,reticulations)
-exampleNetwork2 = addNetworkEdge(exampleNetwork,{{1,8},{7,2}},7)
-peek oo
-*-
 
--- alternative run mode 
-addNetworkEdge (Network,List,List) := (N,edgesToDivideList,vertexInNewReticulationList) -> (
-    outNetwork := N;
-    scan(#edgesToDivideList,i -> outNetwork = addNetworkEdge(outNetwork,edgesToDivideList_i,vertexInNewReticulationList_i));
-    outNetwork
+-- For multiple reticulations, supply a list of edge pairs and a corresponding
+addNetworkEdge (Network,List,List) := (N,edgePairs,vertices) -> (
+    assert(#edgePairs == #vertices);
+    out := N;
+    scan(#edgePairs,i ->
+	out = addNetworkEdge(out,edgePairs#i,vertices#i));
+    out
     )
--* Here's an example of how to use addEdge:
-edges = {{1,8},{2,7},{3,6},{4,5},{5,6},{6,7},{7,8},{5,8}};
-reticulations = {{{6,7},{7,8}}};
-leaves = {1,2,3,4};
-exampleNetwork = getNetwork(edges,leaves,reticulations)
-exampleNetwork2 = addNetworkEdge(exampleNetwork,{{{1,8},{7,2}},{{3,6},{4,5}}},{7,3})
-peek oo
-*-
 
-
-
--------------------------------------------------------------
--- Compute variety dimension numerically---------------------
--------------------------------------------------------------
-
--*
-This function computes the dimension of a parameterization numerically
-Input: 
-parameterization	  -- a list of polynomials representing the parameterization
-(the form of a parameterization without q's, i.e., of
-    the form of the output of fourLeafParameterization with
-    includeQs=false)
-Output: 
-the dimension of the parameterized variety
+--------------------------------------------------------------------------------------------
+-*------------------- Estimate the dimension of a parameterized variety ---------------------
+--------------------------------------------------------------------------------------------
+Input:
+parameterization -- a nonempty list of coordinate polynomials, without q variables
+                 -- e.g., the output of fourLeafParameterization with includeQs=false
+Output:
+the Jacobian rank at a random rational point, giving a lower bound
+on the dimension of the image closure; equality holds at a generic point
+--------------------------------------------------------------------------------------------
 *-
 computeDimensionNumerically = method()
 computeDimensionNumerically List := parameterization -> (
-    edgeVariable := flatten entries vars (ring parameterization_0);
-    randomValues := flatten entries random(QQ^(#edgeVariable),QQ^1);
-    randomValuesSubOptions := apply(#edgeVariable, j -> edgeVariable#j => randomValues#j);
-    jac := jacobian matrix{parameterization}; -- compute the symbolic jacobian
-    evaluatedJac := sub(jac, randomValuesSubOptions); -- substitute in the random variables
-    rank evaluatedJac    
+    parameters := flatten entries vars ring(parameterization#0);
+    values := flatten entries random(QQ^(#parameters),QQ^1);
+    evaluationRules := apply(#parameters, i -> parameters#i => values#i);
+    jac := jacobian matrix{parameterization};
+    rank sub(jac,evaluationRules)
     )
 
 end

@@ -25,7 +25,7 @@ export {
     "getLeafPatternDict",
     "getEdges",
     "getReticulationEdges",
-    "getLeafPatternClasess",
+    "getLeafPatternClasses",
     "getNumericLabeling",
     "getGroupLabeling",
     -- Methods
