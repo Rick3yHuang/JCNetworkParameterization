@@ -50,9 +50,9 @@ This usage of this methods is able to add multiple reticulations one by one with
 - [x] Update the function `computeDimensionNumerically` in `Parameterization-Generation.m2` (add to examples, add documentation)
 - [x] change "nucleotideSeq" to "equivclass" or something in `iMap`
 - [x] we need to figure out why we have different dimensions in the half-ziggurat case `/M2/JCNetworkParameterization/EXPERIMENTS/Paper_Examples/`
-- [ ] we need to rerun our computations with the new code
-- [ ] add examples to documentation
-- [ ] read through algorithm section in paper
+- [x] we need to rerun our computations with the new code
+- [x] add examples to documentation
+- [x] read through algorithm section in paper
 - [x] add pictures to documentation (couldn't find a way to embed this, but may be possible to add a link to the image)
 - [ ] not urgent: writing tests
 - [ ] add roadmap to readme. 
