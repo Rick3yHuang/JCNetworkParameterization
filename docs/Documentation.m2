@@ -110,7 +110,7 @@ doc ///
      leaves3LL2 = {1,2,3};
      edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-     network3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+     network3LL2 = getNetwork(edgePairList3LL2,leaves3LL2,reticulationPairList3LL2)
      netList computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
      netList computeParameterization(network3LL2,leafPatternDict3L)
   SeeAlso
