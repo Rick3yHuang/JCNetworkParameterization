@@ -16,10 +16,10 @@ needs "run-all.m2"
 To study a new network family, write a new network constructor under a new family directory and add a new line for this family following
 ```
 networkFamilies = {
-    ("half-ziggurat-family/network-constructor.m2",   6,  12,  3),
-    ("spiral-family/network-constructor.m2",	      7,  15,  3),
-    ("ladder-family/network-constructor.m2",	      5,  9,   2),
-    ("zig-zag-ladder-family/network-constructor.m2",  5,  11,  3)
+    ("one-sided-terrace-family/network-constructor.m2",   6,  12,  3),
+    ("spiral-family/network-constructor.m2",	      	  7,  15,  3),
+    ("ladder-family/network-constructor.m2",	     	  5,  9,   2),
+    ("zig-zag-ladder-family/network-constructor.m2",  	  5,  11,  3)
     }
 ```
 in `JCNetworkParameterization/analysis/run-all.m2`. The data list here for each family are 

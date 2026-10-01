@@ -12,5 +12,5 @@ returnGeneratorsOfStabilizedIdeal (List,ZZ,ZZ,LeafPatternDict) := (parameterizat
     if not isPrime I then << "-- Warning: the ideal is not prime. The generators returned may not be minimal." << endl;
     << "-* The generators of the stabilized ideal up to degree " << maxDegree << " are: " << endl;
     << netList flatten entries gens I << endl;
-    << "-*--------------- Exiting the " << family << " network example -------------------- " << endl;
+    << "-*------------------ Exiting the " << family << " network example ----------------------- " << endl;
     )

@@ -1,10 +1,10 @@
-buildHalfZiggurat = method();
-buildHalfZiggurat ZZ := r -> (
+buildOneSidedTerrace = method();
+buildOneSidedTerrace ZZ := r -> (
     if r < 1 then error "r must be at least 1";
     if r > 7 then (
-	<< "-- Please specify reticulation events for r > 7 in half-ziggurat-family/network-constructor.m2" << endl;
+	<< "-- Please specify reticulation events for r > 7 in one-sided-terrace-family/network-constructor.m2" << endl;
 	<< "-- and rerun the script." << endl;
-	error "Only have information of level-1 to 7 half-ziggurat networks";
+	error "Only have information of level-1 to 7 one-sided terrace networks";
 	);
     N := getNetwork(
 	{{1,5},{2,6},{3,7},{4,8},{5,6},{5,8},{6,7},{7,8}},
@@ -18,14 +18,14 @@ buildHalfZiggurat ZZ := r -> (
     N
     );
 
-networkBuilder = buildHalfZiggurat;
-family = "half-ziggurat";
+networkBuilder = buildOneSidedTerrace;
+family = "one-sided-terrace";
 leafPatternDict = leafPatternDict4L;
 
 << "" << endl;
 << "-------------------------------------------------------------------------------" << endl;
-<< "------------------- studying the half-ziggurat networks -----------------------" << endl;
+<< "---------------- studying the one-sided terrace networks ----------------------" << endl;
 << "-*-----------------------------------------------------------------------------" << endl;
-<< "-- starting with level-1 half-ziggurat network:" << endl;
-<< peek buildHalfZiggurat 1 << endl;
+<< "-- starting with level-1 one-sided terrace network:" << endl;
+<< peek buildOneSidedTerrace 1 << endl;
 << "-*------------------- adding new retiuclation events --------------------------" << endl;
