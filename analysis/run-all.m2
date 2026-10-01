@@ -12,8 +12,10 @@ needs "find-generators-of-ideal-stabilized.m2"
 
 networkFamilies = {
     -- (constructorFile, maxLevel, expectedDimStabilized, generatorMaxDegree)
-    ("half-ziggurat-family/network-constructor.m2",   7,  12,  3),
-    ("spiral-family/network-constructor.m2",	      8,  15,  3)
+    ("half-ziggurat-family/network-constructor.m2",   6,  12,  3),
+    ("spiral-family/network-constructor.m2",	      7,  15,  3),
+    ("ladder-family/network-constructor.m2",	      5,  9,   2),
+    ("zig-zag-ladder-family/network-constructor.m2",  5,  11,  3)
     }
 
 << "" << endl;

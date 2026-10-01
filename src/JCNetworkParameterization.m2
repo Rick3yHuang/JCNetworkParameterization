@@ -47,7 +47,7 @@ load(baseDirectory | "Parameterization-Generation.m2")
 --------------------------------------------------------------------
 ----- TESTS
 --------------------------------------------------------------------
---load(baseDirectory | "JCNetworkParameterization/TESTS/Test-Parameter-Generation.m2")
+load(baseDirectory | "../tests/tests.m2")
 --------------------------------------------------------------------
 ----- DOCUMENTATION
 --------------------------------------------------------------------
@@ -63,4 +63,4 @@ uninstallPackage "JCNetworkParameterization"
 installPackage "JCNetworkParameterization"
 viewHelp "JCNetworkParameterization"
 needsPackage "JCNetworkParameterization"
---check "JCNetworkParameterization"
+check "JCNetworkParameterization"

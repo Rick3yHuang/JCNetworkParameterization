@@ -1,59 +1,41 @@
 
-# Phylogenetics-Identifiability
+# Parametrization computation of phylogenetic network under the Jukes-Cantor model
 
-```JCNetworkParameterization``` is a ```Macaulay2``` package that can find the parameterization of a given network
+## Ideal Stabilization
 
-## Documentation
+`JCNetworkParameterization/analysis/` contains computations to study network families
+- half-ziggurat family
+- spiral family
+- ladder family
+- zig-zag ladder family
 
-To build documentation, go to `M2/JCNetworkParameterization.m2`, open Macaulay2, and then run the code in the section "BUILD DOCUMENTATION" at the end of the file. (This will open a browser with documentation).
+To confirm the ideal stabilization results in [Arxiv link of the paper], start Macaulay2 under `JCNetworkParameterization/analysis/` and run
+```
+needs "run-all.m2"
+```
+To study a new network family, write a new network constructor under a new family directory and add a new line for this family following
+```
+networkFamilies = {
+    ("half-ziggurat-family/network-constructor.m2",   6,  12,  3),
+    ("spiral-family/network-constructor.m2",	      7,  15,  3),
+    ("ladder-family/network-constructor.m2",	      5,  9,   2),
+    ("zig-zag-ladder-family/network-constructor.m2",  5,  11,  3)
+    }
+```
+in `JCNetworkParameterization/analysis/run-all.m2`. The data list here for each family are 
+- network constructor path,
+- max level of the network,
+- dimension of the stabilization ideal, and
+- the max degree of generators computed for the stabilization ideal.
 
-## Data Types
+Our experiments utilizes the methods from the following Macaulay2 package.
 
-A ```Network``` ```N``` contains informations of edges, leaves, reticulation edges, and level of the network
+## Package ```JCNetworkParameterization```
 
-A ```FourierIndices``` ```fourierIndices``` contains the Fourier index information
+```JCNetworkParameterization``` is a ```Macaulay2``` package that can find the parameterization of a given phylogenetic network under Jukes-Cantor model.
 
-## Key Method Functions
-
-### ```computeParameterization```
-
-Function ```computeParameterization``` of this package can be used to compute the parameterization of given network under a given model
-
-The usage of ```computeParameterization``` is ```computeParameterization(M,fourierIndices,includeQs)```, and the output is a list of polynomials as the parameterizations of the network ```N```.
-
-```includeQs``` is an optional input as a ```Boolean```
-- If ```includeQs => true``` then the Fourier coodinates are included in the parameterization
-- If ```includeQs => false``` then the Fourier coodinates are not included in the parameterization
-
-
-### ```addNetworkEdges```
-
-Function ```addNetworkEdges``` provides a faster way to construct a network
-
-One usage of ```addNetworkEdges``` is ```addNetworkEdges(N,edgesToDivide,vertexInNewReticulation)```, and the output is a new network that has level +1
-
-- ```N``` is a Network object, e.g. a network with edges ${e_{1,8},e_{2,7},e_{3,6},e_{4,5},e_{5,6},e_{6,7},e_{7,8},e_{5,8}}$
-- ```edgesToDivide``` is a list that contains a pair of edges, e.g. {{1,8},{7,2}}
-- ```vertexInNewReticulation``` is an integer representing a vertex's index, e.g. 7
-- example: edges $e_{1,8}$ and $e_{2,7}$ will be subdivide to create new vertices $9$ and $10$. This will create new edges $e_{1,9},e_{8,9},e_{2,10},e_{7,10}$, and $e_{9,10}$. The edge $e_{9,10}$ will be chosen to be one of the new reticulation edges, and since ```vertexInNewReticulation``` is assigned to be $7$, the other edge in the new reticulation pair will be $e_{7,10}$
-
-```addNetworkEdges``` is override with another usage of ```addNetworkEdge(N,listOfEdgesToDivide,listOfVerticesInNewReticulation)```
-
-- ```listOfEdgesToDivide``` is a list of edges to divide in order, e.g. {{{1,8},{7,2}},{{3,6},{4,5}}}
-- ```listOfVerticesInNewReticulation``` is a list of vertex indices indicating the edge in the new reticulation pairs, e.g. {7,3}
-
-This usage of this methods is able to add multiple reticulations one by one with one call of the function
-
-## Todo
-
-- [x] Change "Model" datatype to name "FourierIndices", and change the "NucleotideSequence" datatype to "FourierEquivalenceClasses" (or something to this effect). Also need to change the functions `getNucleotideSequence`, `getModel`, etc.
-- [x] Update the function `computeDimensionNumerically` in `Parameterization-Generation.m2` (add to examples, add documentation)
-- [x] change "nucleotideSeq" to "equivclass" or something in `iMap`
-- [x] we need to figure out why we have different dimensions in the half-ziggurat case `/M2/JCNetworkParameterization/EXPERIMENTS/Paper_Examples/`
-- [x] we need to rerun our computations with the new code
-- [x] add examples to documentation
-- [x] read through algorithm section in paper
-- [x] add pictures to documentation (couldn't find a way to embed this, but may be possible to add a link to the image)
-- [ ] not urgent: writing tests
-- [ ] add roadmap to readme. 
-- [x] fix the function addEdge so that it splits edges properly when reticulations are added
+To build documentation, start Macaulay2 under `JCNetworkParameterization/src/` and run
+```
+installPackage "JCNetworkParameterization"
+viewHelp "JCNetworkParameterization"
+```

@@ -2,7 +2,7 @@ buildHalfZiggurat = method();
 buildHalfZiggurat ZZ := r -> (
     if r < 1 then error "r must be at least 1";
     if r > 7 then (
-	<< "-- Please specify reticulation events for r > 7 in half-ziggurat-network-constructor.m2" << endl;
+	<< "-- Please specify reticulation events for r > 7 in half-ziggurat-family/network-constructor.m2" << endl;
 	<< "-- and rerun the script." << endl;
 	error "Only have information of level-1 to 7 half-ziggurat networks";
 	);
