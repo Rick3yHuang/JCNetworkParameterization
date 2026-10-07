@@ -1,4 +1,4 @@
--- 3-leaf-level-2 : checked regression reference
+-- 3-leaf-reticulations-2 : checked regression reference
 -- Coordinate order: AAA, ACC, CAC, CCA, CGT
 -- JC labeling: A=(0,0), C=(0,1), G=(1,0), T=(1,1).
 -- Unweighted sum over reticulation choices, matching this package.

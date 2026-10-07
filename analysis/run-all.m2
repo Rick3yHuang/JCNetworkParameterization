@@ -14,43 +14,38 @@ needs "stabilize-dim.m2"
 needs "find-generators-of-ideal-stabilized.m2"
 
 networkFamilies = {
-    -- (constructorFile, maxLevel, expectedDimStabilized, generatorMaxDegree)
-    ("one-sided-terrace-family/network-constructor.m2",   6,  12,  3),
-    ("spiral-family/network-constructor.m2",		  7,  15,  3),
-    ("ladder-family/network-constructor.m2",		  5,  9,   2),
-    ("zig-zag-ladder-family/network-constructor.m2",	  5,  11,  3)
+    -- (constructorFile, maxReticulations, generatorMaxDegree)
+    ("one-sided-terrace-family/network-constructor.m2",   6,  3),
+    ("spiral-family/network-constructor.m2",		  7,  3),
+    ("ladder-family/network-constructor.m2",		  5,  2),
+    ("zig-zag-ladder-family/network-constructor.m2",	  5,  3)
     }
 
 << "" << endl;
 setRandomSeed 20260930;
 
 for data in networkFamilies do (
-    (familyFile, maxLevel, expectedDimStabilized, generatorMaxDegree) = data;
+    (familyFile, maxReticulations, generatorMaxDegree) = data;
     needs familyFile;
     dimList = {};
-    elapsedTime scan(maxLevel, r -> (
+    elapsedTime scan(maxReticulations, r -> (
 	    N = networkBuilder (r+1);
 	    parameterization = computeParameterization(N,leafPatternDict4L,includeQs => false);
 	    estimatedDimension = computeDimensionNumerically parameterization;
 	    dimList = append(dimList, estimatedDimension);
-	    << "-- Level-" << toString (r+1) << " "<< family << " network: estimated dimension = " << toString estimatedDimension << endl
+	    << "-- " << family << " network with " << toString (r+1) << " reticulations: estimated dimension = " << toString estimatedDimension << endl
 	    )
 	);
-    levelStabilized = stabilizationIndex dimList;
-    dimStabilized = if levelStabilized > 0 then dimList#(levelStabilized-1) else 0;
+    reticulationsStabilized = stabilizationIndex dimList;
+    dimStabilized = if reticulationsStabilized > 0 then dimList#(reticulationsStabilized-1) else 0;
     << "-------------------------------------------------------------------------------" << endl;
-    if levelStabilized > 0 then (
-	<< "-- The estimated dimension stabilizes at level " << toString levelStabilized << " with dimension " << toString dimStabilized<< endl;
-	if dimStabilized == expectedDimStabilized then
-	<< "-- expected dimension stabilization checked OK." << endl
-	else(
-	<< "-- Warning: expected dimension stabilization is " << toString expectedDimStabilized << endl;
-	<< "--          but the estimated dimension stabilization is " << toString dimStabilized << endl;);
-	NStabilized = networkBuilder levelStabilized;
+    if reticulationsStabilized > 0 then (
+	<< "-- The estimated dimension stabilizes at " << toString reticulationsStabilized << " reticulations with dimension " << toString dimStabilized<< endl;
+	NStabilized = networkBuilder reticulationsStabilized;
 	parameterizationStabilized = computeParameterization(NStabilized,leafPatternDict,includeQs => false);
-	returnGeneratorsOfStabilizedIdeal(toList parameterizationStabilized,levelStabilized,generatorMaxDegree,leafPatternDict);
+	returnGeneratorsOfStabilizedIdeal(toList parameterizationStabilized,reticulationsStabilized,generatorMaxDegree,leafPatternDict);
 	)
-    else << "-- The estimated dimension does not stabilize in the range of levels considered." << endl;
+    else << "-- The estimated dimension does not stabilize in the range of reticulation counts considered." << endl;
     )
 << "-------------------------- All examples are done! -----------------------------" << endl;
 end

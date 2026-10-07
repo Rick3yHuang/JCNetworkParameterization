@@ -130,7 +130,7 @@ generateQ (Matrix,Network,Sequence,LeafPatternDict) := (sigma,N,leafPattern,leaf
 		findVariable(Rvars,concatenate("b_",toString endpoints))
 		}
 	    ));
-    k := getLevel N;
+    k := getNumberOfReticulations N;
     -- Choose one incoming edge to discard at each reticulation.
     -- output is a list of all 2^k possible sets of reticulation edges to discard
     discardedReticulationSets := apply(2^k,j -> (

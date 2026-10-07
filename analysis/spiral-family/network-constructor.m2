@@ -4,7 +4,7 @@ buildSpiral ZZ := r -> (
     if r > 8 then (
 	<< "-- Please specify reticulation events for r > 8 in spiral-family/network-constructor.m2" << endl;
 	<< "-- and rerun the script." << endl;
-	error "Only have information of level-1 to 8 spiral networks";
+	error "Only have information for spiral networks with 1 to 8 reticulations";
 	);
     N := getNetwork(
 	{{1,5},{2,6},{3,7},{4,8},{5,6},{5,8},{6,7},{7,8}},
@@ -26,6 +26,6 @@ leafPatternDict = leafPatternDict4L;
 << "-------------------------------------------------------------------------------" << endl;
 << "----------------------- studying the spiral networks --------------------------" << endl;
 << "-*-----------------------------------------------------------------------------" << endl;
-<< "-- starting with level-1 spiral network:" << endl;
+<< "-- starting with a spiral network with one reticulation:" << endl;
 << peek buildSpiral 1 << endl;
 << "-*------------------- adding new retiuclation events --------------------------" << endl;

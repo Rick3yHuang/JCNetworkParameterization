@@ -10,7 +10,7 @@ getNetwork (List,List,List) := (edgePairListSorted,leaves,reticulationEdges) -> 
         "sorted edges" => VerticalList sort apply(edgePairListSorted,ep -> sort(ep)),
         "leaves" => leaves,
         "reticulation edges" => VerticalList reticulationEdges,
-	"level" => #reticulationEdges
+	"number of reticulations" => #reticulationEdges
     }
 )
 
@@ -21,8 +21,8 @@ getLeaves = method()
 getLeaves Network := N -> N#"leaves"
 getReticulationEdges = method()
 getReticulationEdges Network := N -> VerticalList  N#"reticulation edges"
-getLevel = method()
-getLevel Network := N -> N#"level"
+getNumberOfReticulations = method()
+getNumberOfReticulations Network := N -> N#"number of reticulations"
 
 ---------------------------------------------------------------------
 --- Define a data type for representing models-----------------------

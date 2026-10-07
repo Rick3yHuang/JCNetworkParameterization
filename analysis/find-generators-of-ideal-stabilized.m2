@@ -1,5 +1,5 @@
 returnGeneratorsOfStabilizedIdeal = method();
-returnGeneratorsOfStabilizedIdeal (List,ZZ,ZZ,LeafPatternDict) := (parameterization,levelStabilized,maxDegree,leafPatternDict) -> (
+returnGeneratorsOfStabilizedIdeal (List,ZZ,ZZ,LeafPatternDict) := (parameterization,reticulationsStabilized,maxDegree,leafPatternDict) -> (
     paramRing := ring first parameterization;
     fourierCoordinates := toList apply((getLeafPatternClasses leafPatternDict),j-> q_(toSequence apply(#j, k -> (getNumericLabeling leafPatternDict)#(j#k)))); -- builds the correctly-named fourier coordinate variables
     qRing := QQ[fourierCoordinates];

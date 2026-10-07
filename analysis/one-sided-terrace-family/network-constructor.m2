@@ -4,7 +4,7 @@ buildOneSidedTerrace ZZ := r -> (
     if r > 7 then (
 	<< "-- Please specify reticulation events for r > 7 in one-sided-terrace-family/network-constructor.m2" << endl;
 	<< "-- and rerun the script." << endl;
-	error "Only have information of level-1 to 7 one-sided terrace networks";
+	error "Only have information for one-sided terrace networks with 1 to 7 reticulations";
 	);
     N := getNetwork(
 	{{1,5},{2,6},{3,7},{4,8},{5,6},{5,8},{6,7},{7,8}},
@@ -26,6 +26,6 @@ leafPatternDict = leafPatternDict4L;
 << "-------------------------------------------------------------------------------" << endl;
 << "---------------- studying the one-sided terrace networks ----------------------" << endl;
 << "-*-----------------------------------------------------------------------------" << endl;
-<< "-- starting with level-1 one-sided terrace network:" << endl;
+<< "-- starting with a one-sided terrace network with one reticulation:" << endl;
 << peek buildOneSidedTerrace 1 << endl;
 << "-*------------------- adding new retiuclation events --------------------------" << endl;

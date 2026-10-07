@@ -90,7 +90,7 @@ doc ///
     computeParameterization(N,leafPatternDict)
   Inputs
     N: Network
-       a network indicating the edges, leaves, reticulation edges, and level of the network.
+       a network indicating the edges, leaves, reticulation edges, and number of reticulations of the network.
     leafPatternDict: LeafPatternDict
        a LeafPatternDict data type including the leaf pattern classes and group labeling the network.
     includeQs => Boolean
@@ -100,19 +100,19 @@ doc ///
        a list of polynomials from the parameterization
   Description
    Text
-     Let N3LL2 be a 3-leaf level-2 network and M3L be a Jukes-Canter phylogenetic model. This function computes the
-     parameterization of N3LL2 under the model M3L. The output is a list of polynomials representing the parameterization.
+     Let N3L2R be a 3-leaf network with two reticulations and M3L be a Jukes-Canter phylogenetic model. This function computes the
+     parameterization of N3L2R under the model M3L. The output is a list of polynomials representing the parameterization.
    Example
      leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
      numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3}
      groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}}
      leafPatternDict3L= getLeafPatternDict(leafPattern3L,numericLabeling3L,groupLabeling3L);
-     leaves3LL2 = {1,2,3};
-     edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-     reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-     network3LL2 = getNetwork(edgePairList3LL2,leaves3LL2,reticulationPairList3LL2)
-     netList computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
-     netList computeParameterization(network3LL2,leafPatternDict3L)
+     leaves3L2R = {1,2,3};
+     edgePairList3L2R = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+     reticulationPairList3L2R = {{{4,6},{5,6}},{{6,7},{7,8}}};
+     network3L2R = getNetwork(edgePairList3L2R,leaves3L2R,reticulationPairList3L2R)
+     netList computeParameterization(network3L2R,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
+     netList computeParameterization(network3L2R,leafPatternDict3L)
   SeeAlso
     (getNetwork,List,List,List)
     (getLeafPatternDict,List,HashTable,HashTable)
@@ -245,15 +245,15 @@ doc ///
        a list of reticulation edges in the network, where each reticulation edge is represented as a list of two vertices
   Outputs
     N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level of the network
+       a Network data type including the sorted edges, leaves, reticulation edges, and number of reticulations of the network
   Description
     Text
-      The following example constructs a Network data type for a 3-leaf level-2 network.
+      The following example constructs a Network data type for a 3-leaf network with two reticulations.
     Example
-      leaves3LL2 = {1,2,3};
-      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2)
+      leaves3L2R = {1,2,3};
+      EPList3L2R = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3L2R = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3L2R = getNetwork(EPList3L2R,leaves3L2R,reticulationPairList3L2R)
 ///
 
 doc /// 
@@ -266,7 +266,7 @@ doc ///
     getReticulationEdges(Network)
   Inputs
     N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level
+       a Network data type including the sorted edges, leaves, reticulation edges, and number of reticulations
   Outputs
     reticulationEdges: List
        a list of reticulation edges in the network, where each reticulation edge is represented as a list of two vertices
@@ -274,11 +274,11 @@ doc ///
     Text
       This method retrieves the reticulation edges as a vertical list from a given Network data type.
     Example
-      leaves3LL2 = {1,2,3};
-      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2);
-      getReticulationEdges N3LL2
+      leaves3L2R = {1,2,3};
+      EPList3L2R = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3L2R = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3L2R = getNetwork(EPList3L2R,leaves3L2R,reticulationPairList3L2R);
+      getReticulationEdges N3L2R
   SeeAlso
     (getNetwork,List,List,List)
 ///
@@ -293,7 +293,7 @@ doc ///
     getEdges(Network)
   Inputs
     N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level
+       a Network data type including the sorted edges, leaves, reticulation edges, and number of reticulations
   Outputs
     edges: List
        a list of edges in the network, where each edge is represented as a list of two
@@ -301,11 +301,11 @@ doc ///
     Text
       This method retrieves the edges as a vertical list from a given Network data type.
     Example
-      leaves3LL2 = {1,2,3};
-      EPList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-      N3LL2 = getNetwork(EPList3LL2,leaves3LL2,reticulationPairList3LL2);
-      getEdges N3LL2
+      leaves3L2R = {1,2,3};
+      EPList3L2R = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3L2R = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      N3L2R = getNetwork(EPList3L2R,leaves3L2R,reticulationPairList3L2R);
+      getEdges N3L2R
   SeeAlso
     (getNetwork,List,List,List)
 ///
@@ -322,7 +322,7 @@ doc ///
     addNetworkEdge(N,edgesToDivideList,vertexInNewReticulationList)
   Inputs
     N: Network
-       a Network data type including the sorted edges, leaves, reticulation edges, and level of the network
+       a Network data type including the sorted edges, leaves, reticulation edges, and number of reticulations of the network
     edgesToDivide: List
        a list of two edges to divide when adding a new edge
     vertexInNewReticulation: ZZ
@@ -334,7 +334,7 @@ doc ///
        a list of integers representing the vertices in the new reticulation edges
   Outputs
     NNew: Network
-       a Network data type including the updated sorted edges, leaves, reticulation edges, and level of the network
+       a Network data type including the updated sorted edges, leaves, reticulation edges, and number of reticulations of the network
   Description
     Text
       The following example adds a new reticulation edge to a given Network data type by dividing two existing edges.
@@ -375,19 +375,19 @@ doc ///
        an integer representing the dimension of the given parameterization
   Description
     Text
-      Given a three-leaf level-2 network N3LL2 and a Jukes-Cantor model M3L, the following example
-      computes the parameterization of N3LL2 under M3L without the Fourier coordinates and then
+      Given a three-leaf network with two reticulations N3L2R and a Jukes-Cantor model M3L, the following example
+      computes the parameterization of N3L2R under M3L without the Fourier coordinates and then
       computes the dimension of the parameterization numerically.
     Example
       leafPattern3L = {(A,A,A),(A,C,C),(C,A,C),(C,C,A),(C,G,T)};
       numericLabeling3L = hashTable{A => 0, C => 1, G => 2, T => 3};
       groupLabeling3L = hashTable{A => {0,0}, C => {0,1}, G => {1,0}, T => {1,1}};
       leafPatternDict3L = getLeafPatternDict(leafPattern3L,numericLabeling3L,groupLabeling3L);
-      leaves3LL2 = {1,2,3};
-      edgePairList3LL2 = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
-      reticulationPairList3LL2 = {{{4,6},{5,6}},{{6,7},{7,8}}};
-      network3LL2 = getNetwork(edgePairList3LL2,leaves3LL2,reticulationPairList3LL2)
-      paramerterization = computeParameterization(network3LL2,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
+      leaves3L2R = {1,2,3};
+      edgePairList3L2R = {{2,7},{8,3},{4,5},{4,1},{4,6},{6,7},{5,8},{7,8},{5,6}};
+      reticulationPairList3L2R = {{{4,6},{5,6}},{{6,7},{7,8}}};
+      network3L2R = getNetwork(edgePairList3L2R,leaves3L2R,reticulationPairList3L2R)
+      paramerterization = computeParameterization(network3L2R,leafPatternDict3L,includeQs => false) -- parametrization without the Fourier coordinates
       computeDimensionNumerically paramerterization
   SeeAlso
     (computeParameterization,Network,LeafPatternDict)

@@ -2,7 +2,7 @@
     testDirectory := toAbsolutePath currentFileDirectory;
 
     -- One regression test per ground-truth file.
-    scan({"3-leaf-level-2.txt", "4-leaf-level-1.txt", "4-leaf-level-2.txt"}, file -> (
+    scan({"3-leaf-reticulations-2.txt", "4-leaf-reticulations-1.txt", "4-leaf-reticulations-2.txt"}, file -> (
 	    TEST ("load " | format(testDirectory | file) | ";\n" | ///
 		N = getNetwork(fixtureEdges,fixtureLeaves,fixtureReticulationPairs);
 		patterns = getLeafPatternDict(fixturePatterns,

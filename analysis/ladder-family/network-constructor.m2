@@ -4,7 +4,7 @@ buildLadder ZZ := r -> (
     if r > 8 then (
 	<< "-- Please specify reticulation events for r > 8 in ladder-family/network-constructor.m2" << endl;
 	<< "-- and rerun the script." << endl;
-	error "Only have information of level-1 to 8 ladder networks";
+	error "Only have information for ladder networks with 1 to 8 reticulations";
 	);
     N := getNetwork(
 	{{1,5},{2,6},{3,7},{4,8},{5,6},{5,8},{6,7},{7,8}},
@@ -26,6 +26,6 @@ leafPatternDict = leafPatternDict4L;
 << "-------------------------------------------------------------------------------" << endl;
 << "----------------------- studying the ladder networks --------------------------" << endl;
 << "-*-----------------------------------------------------------------------------" << endl;
-<< "-- starting with level-1 ladder network:" << endl;
+<< "-- starting with a ladder network with one reticulation:" << endl;
 << peek buildLadder 1 << endl;
 << "-*------------------- adding new reticulation events ---------------------------" << endl;
